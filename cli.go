@@ -147,8 +147,12 @@ func basicSetup(provider string) {
 			ernest_instance = os.Getenv("CURRENT_INSTANCE")
 		}
 		ernest("target", ernest_instance)
+		ernest("login", "--user", admin_usr, "--password", admin_pwd)
+
 		// Create user
-		ernest("user", "create", "--user", admin_usr, "--password", admin_pwd, default_usr, default_pwd)
+		ernest("user", "create", default_usr, default_pwd)
+		ernest("group", "create", "test")
+		ernest("group", "add-user", "2", "2")
 
 		// Login as this user
 		login()

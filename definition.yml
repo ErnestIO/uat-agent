@@ -12,7 +12,7 @@ repos:
     entrypoint: /go/bin/config-store -config /etc/ernest/config.json
 
   - name: api-gateway
-    path: git@github.com:r3labs/api-gateway.git
+    path: git@github.com:ernestio/api-gateway.git
     branch: aws
     links:
       - nats
@@ -58,7 +58,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: datacenter-store
-    path: git@github.com:r3labs/datacenter-store.git
+    path: git@github.com:ernestio/datacenter-store.git
     branch: aws
     links:
       - nats
@@ -78,7 +78,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: workflow-manager
-    path: git@github.com:r3labs/workflow-manager.git
+    path: git@github.com:ernestio/workflow-manager.git
     branch: aws
     links:
       - nats
@@ -90,7 +90,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: definition-mapper
-    path: git@github.com:r3labs/definition-mapper.git
+    path: git@github.com:ernestio/definition-mapper.git
     branch: aws
     links:
       - nats
@@ -102,8 +102,8 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: vcloud-definition-mapper
-    path: git@github.com:r3labs/vcloud-definition-mapper.git
-    branch: aws
+    path: git@github.com:ernestio/vcloud-definition-mapper.git
+    branch: develop
     links:
       - nats
       - redis
@@ -114,8 +114,8 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: aws-definition-mapper
-    path: git@github.com:r3labs/aws-definition-mapper.git
-    branch: aws
+    path: git@github.com:ernestio/aws-definition-mapper.git
+    branch: develop
     links:
       - nats
       - redis
@@ -127,7 +127,7 @@ repos:
 
 
   - name: router-adapter
-    path: git@github.com:r3labs/router-adapter.git
+    path: git@github.com:ernestio/router-adapter.git
     branch: aws
     links:
       - nats
@@ -137,7 +137,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: network-adapter
-    path: git@github.com:r3labs/network-adapter.git
+    path: git@github.com:ernestio/network-adapter.git
     branch: aws
     links:
       - nats
@@ -147,7 +147,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: instance-adapter
-    path: git@github.com:r3labs/instance-adapter.git
+    path: git@github.com:ernestio/instance-adapter.git
     branch: aws
     links:
       - nats
@@ -157,7 +157,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: firewall-adapter
-    path: git@github.com:r3labs/firewall-adapter.git
+    path: git@github.com:ernestio/firewall-adapter.git
     branch: aws
     links:
       - nats
@@ -167,7 +167,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: nat-adapter
-    path: git@github.com:r3labs/nat-adapter.git
+    path: git@github.com:ernestio/nat-adapter.git
     branch: aws
     links:
       - nats
@@ -177,7 +177,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: execution-adapter
-    path: git@github.com:r3labs/execution-adapter.git
+    path: git@github.com:ernestio/execution-adapter.git
     branch: aws
     links:
       - nats
@@ -187,7 +187,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: router-builder
-    path: git@github.com:r3labs/router-builder.git
+    path: git@github.com:ernestio/router-builder.git
     branch: aws
     links:
       - nats
@@ -198,7 +198,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: network-builder
-    path: git@github.com:r3labs/network-builder.git
+    path: git@github.com:ernestio/network-builder.git
     branch: aws
     links:
       - nats
@@ -209,7 +209,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: instance-builder
-    path: git@github.com:r3labs/instance-builder.git
+    path: git@github.com:ernestio/instance-builder.git
     branch: aws
     links:
       - nats
@@ -220,7 +220,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: firewall-builder
-    path: git@github.com:r3labs/firewall-builder.git
+    path: git@github.com:ernestio/firewall-builder.git
     branch: aws
     links:
       - nats
@@ -231,7 +231,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: nat-builder
-    path: git@github.com:r3labs/nat-builder.git
+    path: git@github.com:ernestio/nat-builder.git
     branch: aws
     links:
       - nats
@@ -242,7 +242,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: execution-builder
-    path: git@github.com:r3labs/execution-builder.git
+    path: git@github.com:ernestio/execution-builder.git
     branch: aws
     links:
       - nats
@@ -253,7 +253,7 @@ repos:
       NATS_URI: 'nats://nats:4222'
 
   - name: all-all-fake-connector
-    path: git@github.com:r3labs/all-all-fake-connector.git
+    path: git@github.com:ernestio/all-all-fake-connector.git
     branch: aws
     links:
       - nats

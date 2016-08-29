@@ -8,6 +8,10 @@ This tool helps UAT Ernest.
 make deps
 make test
 ```
+## Build status
+
+* master:  [![CircleCI](https://circleci.com/gh/ErnestIO/uat-agent/tree/master.svg?style=svg)](https://circleci.com/gh/ErnestIO/uat-agent/tree/master)
+* develop: [![CircleCI](https://circleci.com/gh/ErnestIO/uat-agent/tree/develop.svg?style=svg)](https://circleci.com/gh/ErnestIO/uat-agent/tree/develop)
 
 ## Contributing
 
