@@ -1,0 +1,14 @@
+---
+name: my_service
+datacenter: r3-dc2
+bootstrapping: none
+
+instances:
+  - name: stg
+    image: r3/ubuntu-1404
+    cpus: 1
+    memory: 1GB
+    count: 2
+    networks:
+      name: r3-dc2-r3vse1-db
+      start_ip: 10.2.0.90

@@ -1,0 +1,32 @@
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  services:
+    - docker
+  environment:
+    NATS_URI:  nats://127.0.0.1:4222
+    NATS_URI_TEST:  nats://127.0.0.1:4222
+    GOBIN: /home/ubuntu/.go_workspace/bin
+    CURRENT_INSTANCE: http://ernest.local:80/
+    JWT_SECRET: test
+  hosts:
+    ernest.local: 127.0.0.1
+
+dependencies:
+  override:
+    - make deps
+    - ./ci_install_service.sh r3labs natsc master
+    - ./ci_install_service.sh r3labs composable master
+    - ./ci_install_service.sh r3labs ernest-cli aws
+    - sudo pip install docker-compose
+    - mkdir /tmp/composable
+    - composable gen definition.yml template.yml
+    - docker-compose -f docker-compose.yml up -d
+    - docker-compose logs > /tmp/compose.log:
+          background: true
+    - ./ci_setup.sh
+
+test:
+  override:
+    - make test
+    - make lint
