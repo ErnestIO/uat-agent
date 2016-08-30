@@ -17,7 +17,7 @@ dependencies:
     - make deps
     - ./ci_install_service.sh r3labs natsc master
     - ./ci_install_service.sh r3labs composable master
-    - ./ci_install_service.sh ernestio ernest-cli aws
+    - ./ci_install_service.sh ErnestIO ernest-cli develop
     - sudo pip install docker-compose
     - mkdir /tmp/composable
     - composable gen definition.yml template.yml

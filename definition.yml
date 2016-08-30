@@ -13,7 +13,7 @@ repos:
 
   - name: api-gateway
     path: git@github.com:ernestio/api-gateway.git
-    branch: aws
+    branch: develop
     links:
       - nats
     ports:
@@ -59,7 +59,7 @@ repos:
 
   - name: datacenter-store
     path: git@github.com:ernestio/datacenter-store.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -79,7 +79,7 @@ repos:
 
   - name: workflow-manager
     path: git@github.com:ernestio/workflow-manager.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -91,7 +91,7 @@ repos:
 
   - name: definition-mapper
     path: git@github.com:ernestio/definition-mapper.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -128,7 +128,7 @@ repos:
 
   - name: router-adapter
     path: git@github.com:ernestio/router-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -138,7 +138,7 @@ repos:
 
   - name: network-adapter
     path: git@github.com:ernestio/network-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -148,7 +148,7 @@ repos:
 
   - name: instance-adapter
     path: git@github.com:ernestio/instance-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -158,7 +158,7 @@ repos:
 
   - name: firewall-adapter
     path: git@github.com:ernestio/firewall-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -168,7 +168,7 @@ repos:
 
   - name: nat-adapter
     path: git@github.com:ernestio/nat-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -178,7 +178,7 @@ repos:
 
   - name: execution-adapter
     path: git@github.com:ernestio/execution-adapter.git
-    branch: aws
+    branch: develop
     links:
       - nats
     depends:
@@ -188,7 +188,7 @@ repos:
 
   - name: router-builder
     path: git@github.com:ernestio/router-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -199,7 +199,7 @@ repos:
 
   - name: network-builder
     path: git@github.com:ernestio/network-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -210,7 +210,7 @@ repos:
 
   - name: instance-builder
     path: git@github.com:ernestio/instance-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -221,7 +221,7 @@ repos:
 
   - name: firewall-builder
     path: git@github.com:ernestio/firewall-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -232,7 +232,7 @@ repos:
 
   - name: nat-builder
     path: git@github.com:ernestio/nat-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -243,7 +243,7 @@ repos:
 
   - name: execution-builder
     path: git@github.com:ernestio/execution-builder.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
@@ -254,7 +254,7 @@ repos:
 
   - name: all-all-fake-connector
     path: git@github.com:ernestio/all-all-fake-connector.git
-    branch: aws
+    branch: develop
     links:
       - nats
       - redis
