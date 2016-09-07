@@ -13,7 +13,7 @@ repos:
 
   - name: api-gateway
     path: git@github.com:ernestio/api-gateway.git
-    branch: feature/ERNEST-2065
+    branch: develop
     links:
       - nats
     ports:
