@@ -29,6 +29,7 @@ func TestPatchService(t *testing.T) {
 	patchEvent := ServiceCreate{}
 
 	inCreateSub := make(chan *nats.Msg, 1)
+	patchSub := make(chan *nats.Msg, 5)
 	inCreateServiceSub := make(chan *nats.Msg, 1)
 	basicSetup("vcloud")
 
@@ -80,7 +81,7 @@ func TestPatchService(t *testing.T) {
 				So(event.Resource.Catalog, ShouldEqual, "r3")
 				So(event.Resource.Image, ShouldEqual, "ubuntu-1404")
 				So(event.InstanceType, ShouldEqual, "vcloud-fake")
-				So(event.NetworkName, ShouldEqual, "fake-"+service+"-r3-dc2-r3vse1-db")
+				So(event.NetworkName, ShouldEqual, "r3-dc2-r3vse1-db")
 				So(event.RouterIP, ShouldEqual, "")
 				So(event.RouterName, ShouldEqual, "")
 				So(event.RouterType, ShouldEqual, "")
@@ -95,12 +96,12 @@ func TestPatchService(t *testing.T) {
 		Convey("When this service is marked as errored", func() {
 			n.Publish("service.set", []byte(`{"id":"`+createEvent.ID+`","status":"errored"}`))
 			Convey("And I re-apply the same service", func() {
-				sub, _ := n.ChanSubscribe("service.patch", inCreateSub)
+				sub, _ := n.ChanSubscribe("service.patch", patchSub)
 				f := getDefinitionPath("inst1.yml", service)
 				_, err := ernest("service", "apply", f)
 				So(err, ShouldBeNil)
 
-				msg, err := waitMsg(inCreateSub)
+				msg, err := waitMsg(patchSub)
 				json.Unmarshal(msg.Data, &patchEvent)
 
 				Info("And I should receive an event to re-create the service", " ", 8)
