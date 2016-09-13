@@ -24,7 +24,6 @@ func TestAWSHappyPath(t *testing.T) {
 	neSub := make(chan *nats.Msg, 1)
 	inSub := make(chan *nats.Msg, 1)
 	fiSub := make(chan *nats.Msg, 1)
-	naSub := make(chan *nats.Msg, 1)
 
 	basicSetup("aws")
 
@@ -35,7 +34,6 @@ func TestAWSHappyPath(t *testing.T) {
 			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
 			subInC, _ := n.ChanSubscribe("instance.create.aws-fake", inSub)
 			subFiC, _ := n.ChanSubscribe("firewall.create.aws-fake", fiSub)
-			subNaC, _ := n.ChanSubscribe("nat.create.aws-fake", naSub)
 
 			o, err := ernest("service", "apply", f)
 
@@ -68,7 +66,6 @@ func TestAWSHappyPath(t *testing.T) {
 				event := awsNetworkEvent{}
 				eventI := awsInstanceEvent{}
 				eventF := awsFirewallEvent{}
-				eventNa := awsNatEvent{}
 
 				msg, err := waitMsg(neSub)
 				So(err, ShouldBeNil)
@@ -82,10 +79,6 @@ func TestAWSHappyPath(t *testing.T) {
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &eventF)
 				subFiC.Unsubscribe()
-				msg, err = waitMsg(naSub)
-				So(err, ShouldBeNil)
-				json.Unmarshal(msg.Data, &eventNa)
-				subNaC.Unsubscribe()
 
 				Info("And should call network creator connector with valid fields", " ", 6)
 				So(event.Type, ShouldEqual, "aws-fake")
@@ -128,15 +121,6 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
 				So(eventI.Status, ShouldEqual, "")
 
-				Info("And should call nat creator connector with valid fields", " ", 6)
-				So(event.Type, ShouldEqual, "aws-fake")
-				So(eventNa.DatacenterRegion, ShouldEqual, "fake")
-				So(eventNa.DatacenterAccessToken, ShouldEqual, "fake")
-				So(eventNa.DatacenterAccessKey, ShouldEqual, "secret")
-				So(eventNa.DatacenterVPCID, ShouldEqual, "fakeaws")
-				So(eventNa.NatGatewayAWSID, ShouldEqual, "")
-				So(eventNa.NetworkAWSID, ShouldEqual, "foo")
-				So(eventNa.Status, ShouldEqual, "")
 			})
 
 			waitToDone()
@@ -493,7 +477,6 @@ func TestAWSHappyPath(t *testing.T) {
 		Convey("When I apply aws9.yml", func() {
 			f := getDefinitionPathAWS("aws9.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.delete.aws-fake", neSub)
-			subNaC, _ := n.ChanSubscribe("nat.delete.aws-fake", naSub)
 			o, err := ernest("service", "apply", f)
 			Convey("Then it should delete network 10.2.0.0/24", func() {
 				if err != nil {
@@ -517,17 +500,11 @@ func TestAWSHappyPath(t *testing.T) {
 				}
 
 				event := awsNetworkEvent{}
-				naEvent := awsNatEvent{}
 
 				msg, err := waitMsg(neSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &event)
 				subNeC.Unsubscribe()
-
-				msg, err = waitMsg(naSub)
-				So(err, ShouldBeNil)
-				json.Unmarshal(msg.Data, &naEvent)
-				subNaC.Unsubscribe()
 
 				Info("And should call network deleter connector with valid fields", " ", 6)
 				So(event.Type, ShouldEqual, "aws-fake")
@@ -536,16 +513,6 @@ func TestAWSHappyPath(t *testing.T) {
 				So(event.DatacenterAccessKey, ShouldEqual, "secret")
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
-
-				Info("And should call nat deleter connector with valid fields", " ", 6)
-				So(naEvent.Type, ShouldEqual, "aws-fake")
-				So(naEvent.DatacenterRegion, ShouldEqual, "fake")
-				So(naEvent.DatacenterAccessToken, ShouldEqual, "fake")
-				So(naEvent.DatacenterAccessKey, ShouldEqual, "secret")
-				So(naEvent.DatacenterVPCID, ShouldEqual, "fakeaws")
-				So(naEvent.NatGatewayAWSID, ShouldEqual, "")
-				So(naEvent.NetworkAWSID, ShouldEqual, "")
-				So(naEvent.Status, ShouldEqual, "")
 
 			})
 			waitToDone()
