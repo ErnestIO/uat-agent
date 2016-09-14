@@ -28,6 +28,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 	fwCreateSub := make(chan *nats.Msg, 1)
 	ntCreateSub := make(chan *nats.Msg, 2)
 	exCreateSub := make(chan *nats.Msg, 3)
+	boCreateSub := make(chan *nats.Msg, 3)
 	inUpdateSub := make(chan *nats.Msg, 2)
 	fwUpdateSub := make(chan *nats.Msg, 1)
 	ntUpdateSub := make(chan *nats.Msg, 1)
@@ -884,6 +885,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 			isub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 			fsub, _ := n.ChanSubscribe("firewall.create.vcloud-fake", fwCreateSub)
 			asub, _ := n.ChanSubscribe("nat.create.vcloud-fake", ntCreateSub)
+			bsub, _ := n.ChanSubscribe("bootstrap.create.fake", boCreateSub)
 			esub, _ := n.ChanSubscribe("execution.create.fake", exCreateSub)
 
 			f := getDefinitionPath("novse12.yml", service2)
@@ -950,7 +952,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &na)
 				ex := executionEvent{}
-				msg, err = waitMsg(exCreateSub)
+				msg, err = waitMsg(boCreateSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &ex)
 				ex2 := executionEvent{}
@@ -1170,11 +1172,13 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 			fsub.Unsubscribe()
 			asub.Unsubscribe()
 			esub.Unsubscribe()
+			bsub.Unsubscribe()
 		})
 
 		Convey("When I apply a valid novse13.yml definition", func() {
 			isub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 			esub, _ := n.ChanSubscribe("execution.create.fake", exCreateSub)
+			bsub, _ := n.ChanSubscribe("bootstrap.create.fake", boCreateSub)
 
 			f := getDefinitionPath("novse13.yml", service2)
 
@@ -1210,7 +1214,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &i)
 				ex := executionEvent{}
-				msg, err = waitMsg(exCreateSub)
+				msg, err = waitMsg(boCreateSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &ex)
 				ex2 := executionEvent{}
@@ -1265,6 +1269,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 			isub.Unsubscribe()
 			esub.Unsubscribe()
+			bsub.Unsubscribe()
 		})
 
 		Convey("When I apply a valid novse14.yml definition", func() {
@@ -1315,6 +1320,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 		Convey("When I apply a valid novse15.yml definition", func() {
 			isub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 			esub, _ := n.ChanSubscribe("execution.create.fake", exCreateSub)
+			bsub, _ := n.ChanSubscribe("bootstrap.create.fake", boCreateSub)
 
 			f := getDefinitionPath("novse15.yml", service2)
 
@@ -1373,7 +1379,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				ex := executionEvent{}
-				msg, err = waitMsg(exCreateSub)
+				msg, err = waitMsg(boCreateSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &ex)
 				ex2 := executionEvent{}
@@ -1405,6 +1411,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 			isub.Unsubscribe()
 			esub.Unsubscribe()
+			bsub.Unsubscribe()
 		})
 
 		Convey("When I apply a valid novse16.yml definition", func() {

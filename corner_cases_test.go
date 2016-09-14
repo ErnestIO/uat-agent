@@ -96,7 +96,7 @@ func TestPatchService(t *testing.T) {
 		Convey("When this service is marked as errored", func() {
 			n.Publish("service.set", []byte(`{"id":"`+createEvent.ID+`","status":"errored"}`))
 			Convey("And I re-apply the same service", func() {
-				sub, _ := n.ChanSubscribe("service.patch", patchSub)
+				sub, _ := n.ChanSubscribe("service.create", patchSub)
 				f := getDefinitionPath("inst1.yml", service)
 				_, err := ernest("service", "apply", f)
 				So(err, ShouldBeNil)
@@ -105,8 +105,8 @@ func TestPatchService(t *testing.T) {
 				json.Unmarshal(msg.Data, &patchEvent)
 
 				Info("And I should receive an event to re-create the service", " ", 8)
-				So(patchEvent.ID, ShouldEqual, createEvent.ID)
-				So(strings.Contains(string(msg.Data), `"service.create"`), ShouldBeFalse)
+				So(patchEvent.ID, ShouldNotEqual, createEvent.ID)
+				So(strings.Contains(string(msg.Data), `"service.create"`), ShouldBeTrue)
 
 				So(err, ShouldBeNil)
 
