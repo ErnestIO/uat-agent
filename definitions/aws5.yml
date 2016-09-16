@@ -7,6 +7,7 @@ service_ip: 172.16.186.44
 
 networks:
   - name: web
+    public: true
     subnet: 10.1.0.0/24
 
 instances:
@@ -34,5 +35,3 @@ security_groups:
         ip: 10.1.1.11/32
         protocol: any
         to_port: '22'
-
-

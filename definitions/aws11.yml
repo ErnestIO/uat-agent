@@ -1,4 +1,4 @@
-# Remove a network
+# Remove a network and remove the new instance
 ---
 name: my_service
 datacenter: r3-dc2
@@ -7,8 +7,8 @@ service_ip: 172.16.186.44
 
 networks:
   - name: web
-    public: true
     subnet: 10.1.0.0/24
+    public: true
 
 instances:
   - name: web

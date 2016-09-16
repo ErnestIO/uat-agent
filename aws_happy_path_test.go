@@ -24,6 +24,7 @@ func TestAWSHappyPath(t *testing.T) {
 	neSub := make(chan *nats.Msg, 1)
 	inSub := make(chan *nats.Msg, 1)
 	fiSub := make(chan *nats.Msg, 1)
+	naSub := make(chan *nats.Msg, 1)
 
 	basicSetup("aws")
 
@@ -53,9 +54,7 @@ func TestAWSHappyPath(t *testing.T) {
 					checkLines[9] = "Creating instances:"
 					checkLines[10] = "\t - fakeaws-" + service + "-web-1"
 					checkLines[11] = "Instances successfully created"
-					checkLines[12] = "Configuring nats"
-					checkLines[13] = "Nats Created"
-					checkLines[14] = "SUCCESS: rules successfully applied"
+					checkLines[12] = "SUCCESS: rules successfully applied"
 
 					vo := CheckOutput(lines, checkLines)
 					if os.Getenv("CHECK_OUTPUT") != "" {
@@ -175,7 +174,7 @@ func TestAWSHappyPath(t *testing.T) {
 
 		Convey("When I apply aws3.yml", func() {
 			f := getDefinitionPathAWS("aws3.yml", service)
-			subInC, _ := n.ChanSubscribe("instance.delete.aws-fake", inSub)
+			subInD, _ := n.ChanSubscribe("instance.delete.aws-fake", inSub)
 			o, err := ernest("service", "apply", f)
 			Convey("Then it should delete xx-web-2 instance", func() {
 				if err != nil {
@@ -201,7 +200,7 @@ func TestAWSHappyPath(t *testing.T) {
 				msg, err := waitMsg(inSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &eventI)
-				subInC.Unsubscribe()
+				subInD.Unsubscribe()
 
 				Info("And should call instance creator connector with valid fields", " ", 6)
 				So(eventI.Type, ShouldEqual, "aws-fake")
@@ -325,7 +324,7 @@ func TestAWSHappyPath(t *testing.T) {
 			f := getDefinitionPathAWS("aws6.yml", service)
 			subFiU, _ := n.ChanSubscribe("firewall.update.aws-fake", fiSub)
 			o, err := ernest("service", "apply", f)
-			Convey("Then it should add an Engress rule to existing firewall", func() {
+			Convey("Then it should add an Egress rule to existing firewall", func() {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
@@ -384,7 +383,7 @@ func TestAWSHappyPath(t *testing.T) {
 			f := getDefinitionPathAWS("aws7.yml", service)
 			subFiU, _ := n.ChanSubscribe("firewall.update.aws-fake", fiSub)
 			o, err := ernest("service", "apply", f)
-			Convey("Then it should delete previously added engress and ingress rules from  existing firewall", func() {
+			Convey("Then it should delete previously added egress and ingress rules from  existing firewall", func() {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
@@ -446,9 +445,7 @@ func TestAWSHappyPath(t *testing.T) {
 					checkLines[4] = "Creating networks:"
 					checkLines[5] = "\t- 10.2.0.0/24"
 					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Configuring nats"
-					checkLines[8] = "Nats Created"
-					checkLines[9] = "SUCCESS: rules successfully applied"
+					checkLines[7] = "SUCCESS: rules successfully applied"
 
 					vo := CheckOutput(lines, checkLines)
 					if os.Getenv("CHECK_OUTPUT") != "" {
@@ -486,12 +483,10 @@ func TestAWSHappyPath(t *testing.T) {
 					checkLines := make([]string, 11)
 
 					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting nats"
-					checkLines[5] = "Nats Deleted"
-					checkLines[6] = "Deleting networks:"
-					checkLines[7] = "\t- 10.2.0.0/24"
-					checkLines[8] = "Networks deleted"
-					checkLines[9] = "SUCCESS: rules successfully applied"
+					checkLines[4] = "Deleting networks:"
+					checkLines[5] = "\t- 10.2.0.0/24"
+					checkLines[6] = "Networks deleted"
+					checkLines[7] = "SUCCESS: rules successfully applied"
 
 					vo := CheckOutput(lines, checkLines)
 					if os.Getenv("CHECK_OUTPUT") != "" {
@@ -518,7 +513,7 @@ func TestAWSHappyPath(t *testing.T) {
 			waitToDone()
 		})
 
-		SkipConvey("When I apply aws10.yml", func() {
+		Convey("When I apply aws10.yml", func() {
 			f := getDefinitionPathAWS("aws10.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
 			subInC, _ := n.ChanSubscribe("instance.create.aws-fake", inSub)
@@ -529,18 +524,16 @@ func TestAWSHappyPath(t *testing.T) {
 				} else {
 					lines := strings.Split(o, "\n")
 					checkLines := make([]string, 13)
-					println(o)
+					// println(o)
 
 					checkLines[0] = "Environment creation requested"
 					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.1.0.0/24"
+					checkLines[5] = "\t- 10.2.0.0/24"
 					checkLines[6] = "Networks successfully created"
 					checkLines[7] = "Creating instances:"
-					checkLines[8] = "\t - fakeaws-" + service + "-web-2"
+					checkLines[8] = "\t - fakeaws-" + service + "-bknd-1"
 					checkLines[9] = "Instances successfully created"
-					checkLines[10] = "Configuring nats"
-					checkLines[11] = "Nats Created"
-					checkLines[12] = "SUCCESS: rules successfully applied"
+					checkLines[10] = "SUCCESS: rules successfully applied"
 
 					vo := CheckOutput(lines, checkLines)
 					if os.Getenv("CHECK_OUTPUT") != "" {
@@ -583,6 +576,137 @@ func TestAWSHappyPath(t *testing.T) {
 				So(event.DatacenterAccessKey, ShouldEqual, "secret")
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
+			})
+			waitToDone()
+		})
+
+		Convey("When I apply aws11.yml", func() {
+			f := getDefinitionPathAWS("aws11.yml", service)
+			subNeD, _ := n.ChanSubscribe("network.delete.aws-fake", neSub)
+			subInD, _ := n.ChanSubscribe("instance.delete.aws-fake", inSub)
+			o, err := ernest("service", "apply", f)
+			Convey("Then it should delete the 10.2.0.0/24 network", func() {
+				if err != nil {
+					log.Println(err.Error())
+				} else {
+					lines := strings.Split(o, "\n")
+					checkLines := make([]string, 13)
+					//println(o)
+
+					checkLines[0] = "Environment creation requested"
+					checkLines[4] = "Deleting instances:"
+					checkLines[5] = "\t - fakeaws-" + service + "-bknd-1"
+					checkLines[6] = "Instances deleted"
+					checkLines[7] = "Deleting networks:"
+					checkLines[8] = "\t- 10.2.0.0/24"
+					checkLines[9] = "Networks deleted"
+					checkLines[10] = "SUCCESS: rules successfully applied"
+
+					vo := CheckOutput(lines, checkLines)
+					if os.Getenv("CHECK_OUTPUT") != "" {
+						So(vo, ShouldEqual, true)
+					}
+				}
+
+				eventI := awsInstanceEvent{}
+
+				msg, err := waitMsg(inSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventI)
+				subInD.Unsubscribe()
+
+				event := awsNetworkEvent{}
+
+				msg, err = waitMsg(neSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &event)
+				subNeD.Unsubscribe()
+
+				Info("And should call instance creator connector with valid fields", " ", 6)
+				So(eventI.Type, ShouldEqual, "aws-fake")
+				So(eventI.DatacenterRegion, ShouldEqual, "fake")
+				So(eventI.DatacenterAccessToken, ShouldEqual, "fake")
+				So(eventI.DatacenterAccessKey, ShouldEqual, "secret")
+				So(eventI.DatacenterVpcID, ShouldEqual, "fakeaws")
+				So(eventI.NetworkAWSID, ShouldEqual, "foo")
+				So(len(eventI.SecurityGroupAWSIDs), ShouldEqual, 1)
+				So(eventI.SecurityGroupAWSIDs[0], ShouldEqual, "foo")
+				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-bknd-2")
+				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
+				So(eventI.InstanceType, ShouldEqual, "e1.micro")
+				So(eventI.Status, ShouldEqual, "processing")
+
+				Info("And should call network creator connector with valid fields", " ", 6)
+				So(event.Type, ShouldEqual, "aws-fake")
+				So(event.DatacenterRegion, ShouldEqual, "fake")
+				So(event.DatacenterAccessToken, ShouldEqual, "fake")
+				So(event.DatacenterAccessKey, ShouldEqual, "secret")
+				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
+				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
+			})
+			waitToDone()
+		})
+
+		Convey("When I apply aws12.yml", func() {
+			f := getDefinitionPathAWS("aws12.yml", service)
+			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
+			subNaC, _ := n.ChanSubscribe("nat.create.aws-fake", naSub)
+			o, err := ernest("service", "apply", f)
+			Convey("Then it should create the new 10.2.0.0/24 network", func() {
+				if err != nil {
+					log.Println(err.Error())
+				} else {
+					lines := strings.Split(o, "\n")
+					checkLines := make([]string, 13)
+					//println(o)
+
+					checkLines[0] = "Environment creation requested"
+					checkLines[4] = "Creating networks:"
+					checkLines[5] = "\t- 10.2.0.0/24"
+					checkLines[6] = "Networks successfully created"
+					checkLines[7] = "Configuring nats"
+					checkLines[8] = "Nats Created"
+					checkLines[9] = "SUCCESS: rules successfully applied"
+
+					vo := CheckOutput(lines, checkLines)
+					if os.Getenv("CHECK_OUTPUT") != "" {
+						So(vo, ShouldEqual, true)
+					}
+				}
+
+				event := awsNetworkEvent{}
+
+				msg, err := waitMsg(neSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &event)
+				subNeC.Unsubscribe()
+
+				eventN := awsNatEvent{}
+
+				msg, err = waitMsg(naSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventN)
+				subNaC.Unsubscribe()
+
+				Info("And should call nat creator connector with valid fields", " ", 6)
+				So(eventN.Type, ShouldEqual, "aws-fake")
+				So(eventN.DatacenterRegion, ShouldEqual, "fake")
+				So(eventN.DatacenterAccessToken, ShouldEqual, "fake")
+				So(eventN.DatacenterAccessKey, ShouldEqual, "secret")
+				So(eventN.DatacenterVPCID, ShouldEqual, "fakeaws")
+				So(eventN.PublicNetwork, ShouldEqual, "fakeaws-"+service+"-web")
+				So(len(eventN.RoutedNetworks), ShouldEqual, 1)
+				So(eventN.RoutedNetworks[0], ShouldEqual, "fakeaws-"+service+"-db")
+				So(eventN.Status, ShouldEqual, "processing")
+
+				Info("And should call network creator connector with valid fields", " ", 6)
+				So(event.Type, ShouldEqual, "aws-fake")
+				So(event.DatacenterRegion, ShouldEqual, "fake")
+				So(event.DatacenterAccessToken, ShouldEqual, "fake")
+				So(event.DatacenterAccessKey, ShouldEqual, "secret")
+				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
+				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
+				So(event.NetworkIsPublic, ShouldBeFalse)
 			})
 			waitToDone()
 		})
