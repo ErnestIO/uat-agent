@@ -1,14 +1,9 @@
-general:
-  build_dir: /home/ubuntu/.go_workspace/src/github.com/ernestio
-
 machine:
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
-    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/ernestio
   services:
     - docker
   environment:
-    HOME: /home/ubuntu/.go_workspace/src/github.com/ernestio
     NATS_URI:  nats://127.0.0.1:4222
     NATS_URI_TEST:  nats://127.0.0.1:4222
     GOBIN: /home/ubuntu/.go_workspace/bin
