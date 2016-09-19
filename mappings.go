@@ -196,7 +196,10 @@ type awsNetworkEvent struct {
 	DatacenterAccessToken string `json:"datacenter_access_token,omitempty"`
 	DatacenterAccessKey   string `json:"datacenter_access_key,omitempty"`
 	DatacenterVpcID       string `json:"datacenter_vpc_id,omitempty"`
+	NetworkType           string `json:"network_type"`
 	NetworkSubnet         string `json:"network_subnet"`
+	NetworkAWSID          string `json:"network_aws_id"`
+	NetworkIsPublic       bool   `json:"network_is_public"`
 }
 
 type awsFirewallRule struct {
@@ -225,16 +228,19 @@ type awsFirewallEvent struct {
 }
 
 type awsNatEvent struct {
-	Uuid                  string `json:"_uuid"`
-	BatchID               string `json:"_batch_id"`
-	Type                  string `json:"_type"`
-	DatacenterRegion      string `json:"datacenter_region"`
-	DatacenterAccessToken string `json:"datacenter_access_token"`
-	DatacenterAccessKey   string `json:"datacenter_access_key"`
-	DatacenterVPCID       string `json:"datacenter_vpc_id"`
-	NatGatewayAWSID       string `json:"nat_gateway_aws_id"`
-	NetworkAWSID          string `json:"network_aws_id"`
-	Status                string `json:"status"`
-	ErrorCode             string `json:"error_code"`
-	ErrorMessage          string `json:"error_message"`
+	Uuid                  string   `json:"_uuid"`
+	BatchID               string   `json:"_batch_id"`
+	Type                  string   `json:"_type"`
+	DatacenterRegion      string   `json:"datacenter_region"`
+	DatacenterAccessToken string   `json:"datacenter_access_token"`
+	DatacenterAccessKey   string   `json:"datacenter_access_key"`
+	DatacenterVPCID       string   `json:"datacenter_vpc_id"`
+	NatGatewayAWSID       string   `json:"nat_gateway_aws_id"`
+	PublicNetwork         string   `json:"public_network"`
+	PublicNetworkAWSID    string   `json:"public_network_aws_id"`
+	RoutedNetworks        []string `json:"routed_networks"`
+	RoutedNetworkAWSIDs   []string `json:"routed_networks_aws_ids"`
+	Status                string   `json:"status"`
+	ErrorCode             string   `json:"error_code"`
+	ErrorMessage          string   `json:"error_message"`
 }

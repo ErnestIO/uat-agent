@@ -8,6 +8,7 @@ service_ip: 172.16.186.44
 networks:
   - name: web
     subnet: 10.1.0.0/24
+    public: true
   - name: bknd
     subnet: 10.2.0.0/24
 
@@ -39,4 +40,3 @@ security_groups:
         ip: 10.1.1.11/32
         protocol: any
         to_port: '80'
-
