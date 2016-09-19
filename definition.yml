@@ -13,7 +13,7 @@ repos:
 
   - name: api-gateway
     path: git@github.com:ernestio/api-gateway.git
-    branch: feature/ERNEST-2069
+    branch: develop
     links:
       - nats
     ports:
@@ -26,7 +26,7 @@ repos:
 
   - name: monit
     path: git@github.com:ernestio/monit.git
-    branch: generic
+    branch: develop
     links:
       - nats
     ports:
@@ -79,7 +79,7 @@ repos:
 
   - name: workflow-manager
     path: git@github.com:ernestio/workflow-manager.git
-    branch: generic
+    branch: develop
     links:
       - nats
       - redis
@@ -103,7 +103,7 @@ repos:
 
   - name: vcloud-definition-mapper
     path: git@github.com:ernestio/vcloud-definition-mapper.git
-    branch: feature/ERNEST-2069
+    branch: develop
     links:
       - nats
       - redis
@@ -115,7 +115,7 @@ repos:
 
   - name: aws-definition-mapper
     path: git@github.com:ernestio/aws-definition-mapper.git
-    branch: feature/ERNEST-2069
+    branch: develop
     links:
       - nats
       - redis
@@ -178,7 +178,7 @@ repos:
 
   - name: execution-adapter
     path: git@github.com:ernestio/execution-adapter.git
-    branch: generic
+    branch: develop
     links:
       - nats
     depends:
@@ -243,7 +243,7 @@ repos:
 
   - name: execution-builder
     path: git@github.com:ernestio/execution-builder.git
-    branch: generic
+    branch: develop
     links:
       - nats
       - redis
@@ -254,7 +254,7 @@ repos:
 
   - name: all-all-fake-connector
     path: git@github.com:ernestio/all-all-fake-connector.git
-    branch: generic
+    branch: develop
     links:
       - nats
       - redis
