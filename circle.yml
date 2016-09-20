@@ -27,7 +27,7 @@ dependencies:
 #    - composable gen definition.yml template.yml
 #    - docker-compose -f docker-compose.yml up -d
 #    - docker-compose logs > /tmp/compose.log:
-          background: true
+#          background: true
 #    - ./ci_setup.sh
 
 test:
