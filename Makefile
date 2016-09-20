@@ -13,8 +13,6 @@ deps:
 
 test:
 	# go test -v
-	pwd
-	ls -1
 	gucumber
 
 lint:

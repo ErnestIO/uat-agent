@@ -29,6 +29,9 @@ dependencies:
 #    - docker-compose logs > /tmp/compose.log:
 #          background: true
 #    - ./ci_setup.sh
+     - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/
+     - ln -s /home/ubuntu/uat-agent uat-agent
+     - cd uat-agent
 
 test:
   override:
