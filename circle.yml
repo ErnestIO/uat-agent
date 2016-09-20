@@ -19,16 +19,16 @@ dependencies:
     - mkdir -p "$GOPATH/src/$IMPORT_PATH"
     - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
     - make deps
-    - ./ci_install_service.sh r3labs natsc master
-    - ./ci_install_service.sh r3labs composable master
+#    - ./ci_install_service.sh r3labs natsc master
+#    - ./ci_install_service.sh r3labs composable master
     - ./ci_install_service.sh ernestio ernest-cli gucumber
-    - sudo pip install docker-compose
-    - mkdir /tmp/composable
-    - composable gen definition.yml template.yml
-    - docker-compose -f docker-compose.yml up -d
-    - docker-compose logs > /tmp/compose.log:
+#    - sudo pip install docker-compose
+#    - mkdir /tmp/composable
+#    - composable gen definition.yml template.yml
+#    - docker-compose -f docker-compose.yml up -d
+#    - docker-compose logs > /tmp/compose.log:
           background: true
-    - ./ci_setup.sh
+#    - ./ci_setup.sh
 
 test:
   override:
