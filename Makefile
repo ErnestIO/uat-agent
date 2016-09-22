@@ -12,7 +12,7 @@ deps:
 	go get github.com/gucumber/gucumber/cmd/gucumber
 
 test:
-	# go test -v
+	go test -v
 	gucumber
 
 lint:

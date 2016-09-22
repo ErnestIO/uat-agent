@@ -19,21 +19,21 @@ dependencies:
     - mkdir -p "$GOPATH/src/$IMPORT_PATH"
     - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
     - make deps
-#    - ./ci_install_service.sh r3labs natsc master
-#    - ./ci_install_service.sh r3labs composable master
+    - ./ci_install_service.sh r3labs natsc master
+    - ./ci_install_service.sh r3labs composable master
     - ./ci_install_service.sh ernestio ernest-cli gucumber
-#    - sudo pip install docker-compose
-#    - mkdir /tmp/composable
-#    - composable gen definition.yml template.yml
-#    - docker-compose -f docker-compose.yml up -d
-#    - docker-compose logs > /tmp/compose.log:
-#          background: true
-#    - ./ci_setup.sh
-     - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/
-     - ln -s /home/ubuntu/uat-agent uat-agent
-     - cd uat-agent
+    - sudo pip install docker-compose
+    - mkdir /tmp/composable
+    - composable gen definition.yml template.yml
+    - docker-compose -f docker-compose.yml up -d
+    - docker-compose logs > /tmp/compose.log:
+          background: true
+    - ./ci_setup.sh
+    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/ernestio/
+    - rm -rf /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent
+    - cp -R /home/ubuntu/uat-agent /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent
 
 test:
   override:
-    - make test
-    - make lint
+    - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent && make test
+    - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent && make lint

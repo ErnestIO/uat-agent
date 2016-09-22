@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"os/exec"
 	"strings"
 
@@ -16,6 +17,10 @@ func init() {
 	})
 
 	Given(`^I setup ernest with target "(.+?)"$`, func(target string) {
+		if os.Getenv("CURRENT_INSTANCE") != "" {
+			target = os.Getenv("CURRENT_INSTANCE")
+		}
+
 		ernest("target", target)
 	})
 
