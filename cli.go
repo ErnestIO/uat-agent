@@ -152,7 +152,7 @@ func basicSetup(provider string) {
 		// Create user
 		ernest("user", "create", default_usr, default_pwd)
 		ernest("group", "create", "test")
-		ernest("group", "add-user", "2", "2")
+		ernest("group", "add-user", default_usr, "test")
 
 		// Login as this user
 		login()
