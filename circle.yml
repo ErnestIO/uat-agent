@@ -9,15 +9,19 @@ machine:
     GOBIN: /home/ubuntu/.go_workspace/bin
     CURRENT_INSTANCE: http://ernest.local:80/
     JWT_SECRET: test
+    IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
+
   hosts:
     ernest.local: 127.0.0.1
 
 dependencies:
   override:
+    - mkdir -p "$GOPATH/src/$IMPORT_PATH"
+    - rsync -azC --delete ./ "$GOPATH/src/$IMPORT_PATH/"
     - make deps
     - ./ci_install_service.sh r3labs natsc master
     - ./ci_install_service.sh r3labs composable master
-    - ./ci_install_service.sh ErnestIO ernest-cli develop
+    - ./ci_install_service.sh ernestio ernest-cli gucumber
     - sudo pip install docker-compose
     - mkdir /tmp/composable
     - composable gen definition.yml template.yml
@@ -25,8 +29,11 @@ dependencies:
     - docker-compose logs > /tmp/compose.log:
           background: true
     - ./ci_setup.sh
+    - mkdir -p /home/ubuntu/.go_workspace/src/github.com/ernestio/
+    - rm -rf /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent
+    - cp -R /home/ubuntu/uat-agent /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent
 
 test:
   override:
-    - make test
-    - make lint
+    - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent && make test
+    - cd /home/ubuntu/.go_workspace/src/github.com/ernestio/uat-agent && make lint
