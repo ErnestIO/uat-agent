@@ -49,6 +49,12 @@ func init() {
 		ernest("logout")
 	})
 
+	When(`^I enter text "(.+?)"$`, func(input string) {
+		cmd := exec.Command("ernest-cli", input)
+		o, err := cmd.CombinedOutput()
+		lastOutput = string(o)
+		lastError = err
+	})
 }
 
 func ernest(cmdArgs ...string) {
