@@ -7,7 +7,7 @@ Feature: Ernest user
     And I run ernest with "user"
     Then The output should contain "list"
     And The output should contain "create"
-    And The output should contain "password"
+    And The output should contain "change-password"
     And The output should contain "disable"
 
   Scenario: running user command as non logged in user
@@ -16,5 +16,5 @@ Feature: Ernest user
     When I run ernest with "user"
     Then The output should contain "list"
     And The output should contain "create"
-    And The output should contain "password"
+    And The output should contain "change-password"
     And The output should contain "disable"
