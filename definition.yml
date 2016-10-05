@@ -13,7 +13,7 @@ repos:
 
   - name: api-gateway
     path: git@github.com:ernestio/api-gateway.git
-    branch: develop
+    branch: ERNEST-2046
     links:
       - nats
     ports:
@@ -59,7 +59,7 @@ repos:
 
   - name: datacenter-store
     path: git@github.com:ernestio/datacenter-store.git
-    branch: develop
+    branch: consolidation
     links:
       - nats
     depends:

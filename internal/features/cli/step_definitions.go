@@ -4,14 +4,22 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"time"
 
+	ecc "github.com/ernestio/ernest-config-client"
 	. "github.com/gucumber/gucumber"
+	"github.com/nats-io/nats"
 )
 
 var lastOutput string
 var lastError error
+var cfg *ecc.Config
+var n *nats.Conn
 
 func init() {
+	cfg = ecc.NewConfig(os.Getenv("NATS_URI"))
+	n = cfg.Nats()
+
 	Before("@login", func() {
 		// runs before every feature or scenario tagged with @login
 	})
@@ -49,6 +57,70 @@ func init() {
 		ernest("logout")
 	})
 
+	When(`^I enter text "(.+?)"$`, func(input string) {
+		cmd := exec.Command("ernest-cli", input)
+		o, err := cmd.CombinedOutput()
+		lastOutput = string(o)
+		lastError = err
+	})
+
+	And(`^the group "(.+?)" does not exist$`, func(group string) {
+		msg := []byte(`{"name":"` + group + `"}`)
+		n.Request("group.del", msg, time.Second*3)
+	})
+
+	And(`^the user "(.+?)" does not exist$`, func(user string) {
+		msg := []byte(`{"username":"` + user + `"}`)
+		n.Request("user.del", msg, time.Second*3)
+	})
+
+	And(`^the datacenter "(.+?)" does not exist$`, func(d string) {
+		msg := []byte(`{"name":"` + d + `", "type":"aws"}`)
+		n.Request("datacenter.del", msg, time.Second*3)
+	})
+
+	And(`^the group "(.+?)" exists$`, func(group string) {
+		msg := []byte(`{"name":"` + group + `"}`)
+		n.Request("group.del", msg, time.Second*3)
+		msg = []byte(`{"name":"` + group + `"}`)
+		n.Request("group.set", msg, time.Second*3)
+	})
+
+	And(`^the user "(.+?)" exists$`, func(user string) {
+		msg := []byte(`{"username":"` + user + `"}`)
+		n.Request("user.del", msg, time.Second*3)
+		msg = []byte(`{"username":"` + user + `","password":"pwd"}`)
+		n.Request("user.set", msg, time.Second*3)
+	})
+
+	And(`^the datacenter "(.+?)" exists$`, func(d string) {
+		msg := []byte(`{"name":"` + d + `", "type":"aws"}`)
+		n.Request("datacenter.del", msg, time.Second*3)
+		msg = []byte(`{"name":"` + d + `"}`)
+		n.Request("datacenter.set", msg, time.Second*3)
+	})
+
+	Then(`^The output users table should contain "(.+?)" assigned to "(.+?)" group$`, func(user string, group string) {
+		lines := strings.Split(lastOutput, "\n")
+		for _, l := range lines {
+			if strings.Contains(l, user) {
+				if !strings.Contains(l, "| "+group) {
+					T.Errorf(`User doesn't seem to belong to specified group: \n` + l)
+				}
+			}
+		}
+	})
+
+	Then(`^The output datacenters table should contain "(.+?)" assigned to "(.+?)" group$`, func(datacenter string, group string) {
+		lines := strings.Split(lastOutput, "\n")
+		for _, l := range lines {
+			if strings.Contains(l, datacenter) {
+				if !strings.Contains(l, "| "+group) {
+					T.Errorf(`Datacenter doesn't seem to belong to specified group: \n` + l)
+				}
+			}
+		}
+	})
 }
 
 func ernest(cmdArgs ...string) {
