@@ -19,6 +19,7 @@ Feature: Ernest user list
 
   Scenario: Admin user creation
     Given I setup ernest with target "https://ernest.local"
+    And the user "test_creation" does not exist
     And I'm logged in as "ci_admin" / "pwd"
     When I run ernest with "user create test_creation pwd"
     Then The output should contain "User test_creation successfully created"

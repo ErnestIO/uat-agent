@@ -20,6 +20,7 @@ Feature: Ernest user disable
 
   Scenario: Admin user disable
     Given I setup ernest with target "https://ernest.local"
+    And the user "to_disable" does not exist
     And I'm logged in as "ci_admin" / "pwd"
     And The output should contain "Welcome back ci_admin"
     When I run ernest with "user create to_disable pwd"
