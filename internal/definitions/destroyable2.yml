@@ -11,3 +11,6 @@ networks:
     public: true
     subnet: 10.1.0.0/24
 
+  - name: other
+    public: true
+    subnet: 10.2.0.0/24
