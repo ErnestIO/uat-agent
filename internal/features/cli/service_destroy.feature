@@ -22,7 +22,7 @@ Feature: Service destroy
     And I'm logged in as "usr" / "pwd"
     And the datacenter "test_dc" does not exist
     And I run ernest with "datacenter create aws --token tmp_token --secret tmp_secret --region tmp_region --fake test_dc"
-    And the service "aws_test_service" does not exist
+    And the service "destroyable" does not exist
     And I run ernest with "service apply internal/definitions/destroyable.yml"
     When I run ernest with "service destroy destroyable --force"
     Then The output line number "0" should contain "Starting environment deletion"
