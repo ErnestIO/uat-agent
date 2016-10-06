@@ -3,6 +3,7 @@ package cli
 import (
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 	"time"
 
@@ -79,6 +80,11 @@ func init() {
 		n.Request("datacenter.del", msg, time.Second*3)
 	})
 
+	And(`^the service "(.+?)" does not exist$`, func(d string) {
+		msg := []byte(`{"name":"` + d + `", "type":"aws"}`)
+		n.Request("service.del", msg, time.Second*3)
+	})
+
 	And(`^the group "(.+?)" exists$`, func(group string) {
 		msg := []byte(`{"name":"` + group + `"}`)
 		n.Request("group.del", msg, time.Second*3)
@@ -120,6 +126,21 @@ func init() {
 				}
 			}
 		}
+	})
+
+	Then(`^The output line number "(.+?)" should contain "(.+?)"$`, func(number int, needle string) {
+		lines := strings.Split(lastOutput, "\n")
+		n := strconv.Itoa(number)
+
+		if len(lines) < number {
+			T.Errorf(`Last output has less than "` + n + `" lines : ` + "\n" + lastOutput)
+			return
+		}
+
+		if strings.Contains(lines[number], needle) == false {
+			T.Errorf(`Line "` + n + `" should contain "` + needle + `" but it doesn't: ` + "\n" + lastOutput)
+		}
+
 	})
 }
 
