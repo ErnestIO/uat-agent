@@ -158,7 +158,7 @@ func basicSetup(provider string) {
 		login()
 
 		// Create a datacenter
-		ernest("datacenter", "create", "vcloud", "fake", "https://myvdc.me.com", "fake", "--fake", "--datacenter-user", default_usr, "--datacenter-password", default_pwd, "--datacenter-org", default_org, "--vse-url", "http://localhost")
+		ernest("datacenter", "create", "vcloud", "fake", "--vcloud-url", "https://myvdc.me.com", "--fake", "--user", default_usr, "--password", default_pwd, "--org", default_org, "--vse-url", "http://localhost", "--public-network", "NETWORK")
 		ernest("datacenter", "create", "aws", "fakeaws", "--region", "fake", "--token", "fake", "--secret", "secret", "--fake")
 
 		setup = true
