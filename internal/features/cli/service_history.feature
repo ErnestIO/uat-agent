@@ -20,9 +20,9 @@ Feature: Service history
   Scenario: Logged service history
     Given I setup ernest with target "https://ernest.local"
     And I'm logged in as "usr" / "pwd"
-    And the datacenter "test_dc" does not exist
+    And The datacenter "test_dc" does not exist
     And I run ernest with "datacenter create aws --token tmp_token --secret tmp_secret --region tmp_region --fake test_dc"
-    And the service "destroyable" does not exist
+    And The service "destroyable" does not exist
     And I run ernest with "service apply internal/definitions/destroyable.yml"
     And I run ernest with "service apply internal/definitions/destroyable2.yml"
     When I run ernest with "service history destroyable"

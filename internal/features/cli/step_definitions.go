@@ -80,7 +80,7 @@ func init() {
 		n.Request("datacenter.del", msg, time.Second*3)
 	})
 
-	And(`^the service "(.+?)" does not exist$`, func(d string) {
+	And(`^The service "(.+?)" does not exist$`, func(d string) {
 		msg := []byte(`{"name":"` + d + `", "type":"aws"}`)
 		n.Request("service.del", msg, time.Second*3)
 	})
