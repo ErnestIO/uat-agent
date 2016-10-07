@@ -70,7 +70,7 @@ func TestPatchService(t *testing.T) {
 				Info("And I should receive a valid instance.create.vcloud-fake", " ", 8)
 				So(event.DatacenterName, ShouldEqual, "fake")
 				So(event.DatacenterPassword, ShouldEqual, default_pwd)
-				So(event.DatacenterRegion, ShouldEqual, "")
+				So(event.DatacenterRegion, ShouldEqual, "$(datacenters.items.0.region)")
 				So(event.DatacenterType, ShouldEqual, "vcloud-fake")
 				So(event.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
 				So(event.InstanceName, ShouldEqual, "fake-"+service+"-stg-1")
