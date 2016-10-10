@@ -609,8 +609,18 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					println(o)
-					expected := ``
+					expected := `Starting environment creation
+Creating networks:
+ - fakeaws-` + service + `-db
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks successfully created
+Creating firewall:
+ - fakeaws-` + service + `-db-nat
+   Status    : completed
+Nats created
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
