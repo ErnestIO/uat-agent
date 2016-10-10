@@ -13,7 +13,7 @@ repos:
 
   - name: api-gateway
     path: git@github.com:ernestio/api-gateway.git
-    branch: ERNEST-2046
+    branch: develop
     links:
       - nats
     ports:
@@ -59,7 +59,7 @@ repos:
 
   - name: datacenter-store
     path: git@github.com:ernestio/datacenter-store.git
-    branch: consolidation
+    branch: develop
     links:
       - nats
     depends:
@@ -262,3 +262,25 @@ repos:
       - config-store
     environment:
       NATS_URI: 'nats://nats:4222'
+
+  - name: generic-adapter
+    path: git@github.com:ernestio/generic-adapter.git
+    branch: master
+    links:
+      - nats
+    depends:
+      - config-store
+    environment:
+      NATS_URI: 'nats://nats:4222'
+
+  - name: generic-builder
+    path: git@github.com:ernestio/generic-builder.git
+    branch: master
+    links:
+      - nats
+      - redis
+    depends:
+      - config-store
+    environment:
+      NATS_URI: 'nats://nats:4222'
+
