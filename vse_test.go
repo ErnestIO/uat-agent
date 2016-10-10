@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -53,32 +52,37 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 21)
 
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating routers:"
-					checkLines[5] = "\t1.1.1.1"
-					checkLines[6] = "Routers successfully created"
-					checkLines[7] = "Creating networks:"
-					checkLines[8] = "\t- 10.1.0.0/24"
-					checkLines[9] = "Networks successfully created"
-					checkLines[10] = "Creating instances:"
-					checkLines[11] = "\t - fake-" + service + "-web-1"
-					checkLines[12] = "Instances successfully created"
-					checkLines[13] = "Updating instances:"
-					checkLines[14] = "\t - fake-" + service + "-web-1"
-					checkLines[15] = "Instances successfully updated"
-					checkLines[16] = "Setting up firewalls:"
-					checkLines[17] = "Firewalls Created"
-					checkLines[18] = "Configuring nats"
-					checkLines[19] = "Nats Created"
-					checkLines[20] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Creating routers:
+ - vse4
+   Status    : completed
+Routers created
+Creating networks:
+ - fake-` + service + `-web
+   IP     : 10.1.0.0/24
+   Status : completed
+Networks successfully created
+Creating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully updated
+Creating firewall:
+ - fake-` + service + `-vse4
+   Status    : completed
+Firewalls created
+Creating firewall:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats created
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 				r := routerEvent{}
 				msg, err := waitMsg(roCreateSub)
@@ -199,7 +203,7 @@ func TestVSE(t *testing.T) {
 				So(na.RouterName, ShouldEqual, "vse4")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
 				Printf("\n        And it configures from 10.1.0.0/24:any to NAT-IP:any")
-				So(na.NatRules[0].Network, ShouldEqual, "fake")
+				So(na.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[0].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(na.NatRules[0].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[0].Type, ShouldEqual, "snat")
@@ -207,7 +211,7 @@ func TestVSE(t *testing.T) {
 				So(na.NatRules[0].TranslationPort, ShouldEqual, "any")
 				So(na.NatRules[0].Protocol, ShouldEqual, "any")
 				Printf("\n        And it configures from NAT-IP:22 to 10.1.0.11:22")
-				So(na.NatRules[1].Network, ShouldEqual, "fake")
+				So(na.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[1].OriginIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[1].OriginPort, ShouldEqual, "22")
 				So(na.NatRules[1].Type, ShouldEqual, "dnat")
@@ -234,18 +238,18 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating firewalls:"
-					checkLines[5] = "Firewalls Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fake-` + service + `-vse4
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 				event := firewallEvent{}
 				msg, err := waitMsg(fiUpdateSub)
@@ -286,17 +290,14 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Configuring nats"
-					checkLines[5] = "Nats Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := natEvent{}
@@ -317,7 +318,7 @@ func TestVSE(t *testing.T) {
 				So(event.RouterType, ShouldEqual, "vcloud-fake")
 
 				Info("And it configures from 10.1.0.0/24:any to NAT-IP:any", " ", 8)
-				So(event.NatRules[0].Network, ShouldEqual, "fake")
+				So(event.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(event.NatRules[0].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(event.NatRules[0].OriginPort, ShouldEqual, "any")
 				So(event.NatRules[0].Type, ShouldEqual, "snat")
@@ -326,7 +327,7 @@ func TestVSE(t *testing.T) {
 				So(event.NatRules[0].Protocol, ShouldEqual, "any")
 
 				Info("And it configures from NAT-IP:22 to 10.1.0.11:22", " ", 8)
-				So(event.NatRules[1].Network, ShouldEqual, "fake")
+				So(event.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(event.NatRules[1].OriginIP, ShouldEqual, "1.1.1.1")
 				So(event.NatRules[1].OriginPort, ShouldEqual, "22")
 				So(event.NatRules[1].Type, ShouldEqual, "dnat")
@@ -335,7 +336,7 @@ func TestVSE(t *testing.T) {
 				So(event.NatRules[1].Protocol, ShouldEqual, "tcp")
 
 				Info("And it configures from NAT-IP:23 to 10.1.0.12:23", " ", 8)
-				So(event.NatRules[2].Network, ShouldEqual, "fake")
+				So(event.NatRules[2].Network, ShouldEqual, "NETWORK")
 				So(event.NatRules[2].OriginIP, ShouldEqual, "1.1.1.1")
 				So(event.NatRules[2].OriginPort, ShouldEqual, "23")
 				So(event.NatRules[2].Type, ShouldEqual, "dnat")
@@ -359,20 +360,24 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-web-2"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("Then it will create web-2 instance", " ", 8)
@@ -439,19 +444,22 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				ui := instanceEvent{}
@@ -520,19 +528,20 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				ui1 := instanceEvent{}
@@ -609,19 +618,21 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				ui1 := instanceEvent{}
@@ -694,21 +705,19 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 10)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.2.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Configuring nats"
-					checkLines[8] = "Nats Updated"
-					checkLines[9] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fake-` + service + `-db
+   IP     : 10.2.0.0/24
+   Status : completed
+Networks successfully created
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n := networkEvent{}
@@ -743,7 +752,7 @@ func TestVSE(t *testing.T) {
 				So(na.RouterIP, ShouldEqual, "1.1.1.1")
 				So(na.RouterName, ShouldEqual, "vse4")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
-				So(na.NatRules[0].Network, ShouldEqual, "fake")
+				So(na.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[0].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(na.NatRules[0].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[0].Type, ShouldEqual, "snat")
@@ -752,21 +761,21 @@ func TestVSE(t *testing.T) {
 				So(na.NatRules[0].Protocol, ShouldEqual, "any")
 
 				Info("And it configures from NAT-IP:23 to 10.1.0.12:23", " ", 8)
-				So(na.NatRules[1].Network, ShouldEqual, "fake")
+				So(na.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[1].OriginIP, ShouldEqual, "10.2.0.0/24")
 				So(na.NatRules[1].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[1].Type, ShouldEqual, "snat")
 				So(na.NatRules[1].TranslationIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[1].TranslationPort, ShouldEqual, "any")
 				So(na.NatRules[1].Protocol, ShouldEqual, "any")
-				So(na.NatRules[2].Network, ShouldEqual, "fake")
+				So(na.NatRules[2].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[2].OriginIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[2].OriginPort, ShouldEqual, "22")
 				So(na.NatRules[2].Type, ShouldEqual, "dnat")
 				So(na.NatRules[2].TranslationIP, ShouldEqual, "10.1.0.11")
 				So(na.NatRules[2].TranslationPort, ShouldEqual, "22")
 				So(na.NatRules[2].Protocol, ShouldEqual, "tcp")
-				So(na.NatRules[3].Network, ShouldEqual, "fake")
+				So(na.NatRules[3].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[3].OriginIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[3].OriginPort, ShouldEqual, "23")
 				So(na.NatRules[3].Type, ShouldEqual, "dnat")
@@ -789,20 +798,24 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-db-1"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-db-1"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -869,19 +882,19 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances deleted
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -923,19 +936,19 @@ func TestVSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-db-1"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances deleted
+Updating nats:
+ - fake-` + service + `-vse4
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -971,31 +984,30 @@ func TestVSE(t *testing.T) {
 		Convey("When I destroy the current service", func() {
 			subInDelete, _ := n.ChanSubscribe("instance.delete.vcloud-fake", inDeleteSub2)
 			subRoDelete, _ := n.ChanSubscribe("router.delete.vcloud-fake", roDeleteSub)
-			o, err := ernest("service", "destroy", "--yes", service)
+			o, err := ernest("service", "destroy", "--force", service)
 
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Starting environment deletion"
-					checkLines[1] = "Deleting instances:"
-					checkLines[2] = "\t - fake-" + service + "-web-1"
-					checkLines[3] = "Instances deleted"
-					checkLines[4] = "Deleting networks:"
-					checkLines[5] = "\t- 10.1.0.0/24"
-					checkLines[6] = "\t- 10.2.0.0/24"
-					checkLines[7] = "Networks deleted"
-					checkLines[8] = "Deleting router:"
-					checkLines[9] = "Routers deleted"
-					checkLines[10] = "SUCCESS: your environment has been successfully deleted"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment deletion
+Deleting instances
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances deleted
+Deleting networks:
+ - fake-` + service + `-web
+   IP     : 10.1.0.0/24
+   Status : completed
+ - fake-` + service + `-db
+   IP     : 10.2.0.0/24
+   Status : completed
+Networks deleted
+Deleting routers:
+Routers deleted
+SUCCESS: your environment has been successfully deleted`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
