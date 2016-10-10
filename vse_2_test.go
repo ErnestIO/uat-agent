@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -45,40 +44,54 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 29)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating routers:"
-					checkLines[5] = "\t1.1.1.1"
-					checkLines[6] = "Routers successfully created"
-					checkLines[7] = "Creating networks:"
-					checkLines[8] = "\t- 10.254.254.0/24"
-					checkLines[9] = "\t- 10.1.0.0/24"
-					checkLines[10] = "Networks successfully created"
-					checkLines[11] = "Creating instances:"
-					checkLines[12] = "\t - fake-" + service + "-salt-master"
-					checkLines[13] = "\t - fake-" + service + "-web-1"
-					checkLines[14] = "Instances successfully created"
-					checkLines[15] = "Updating instances:"
-					checkLines[16] = "\t - fake-" + service + "-salt-master"
-					checkLines[17] = "\t - fake-" + service + "-web-1"
-					checkLines[18] = "Instances successfully updated"
-					checkLines[19] = "Setting up firewalls:"
-					checkLines[20] = "Firewalls Created"
-					checkLines[21] = "Configuring nats"
-					checkLines[22] = "Nats Created"
-					checkLines[23] = "Bootstrapping"
-					checkLines[24] = "Instances bootstrapped"
-					checkLines[25] = "Running executions"
-					checkLines[26] = "Executions ran"
-					checkLines[27] = "SUCCESS: rules successfully applied"
-					checkLines[28] = "Your environment endpoint is: 1.1.1.1"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating routers:
+ - vse5
+   Status    : completed
+Routers created
+Creating networks:
+ - fake-` + service + `-salt
+   IP     : 10.254.254.0/24
+   Status : completed
+ - fake-` + service + `-web
+   IP     : 10.1.0.0/24
+   Status : completed
+Networks successfully created
+Creating instances:
+ - fake-` + service + `-salt-master
+   IP        : 10.254.254.100
+   Status    : completed
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-salt-master
+   IP        : 10.254.254.100
+   Status    : completed
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully updated
+Creating firewall:
+ - fake-` + service + `-vse5
+   Status    : completed
+Firewalls created
+Creating firewall:
+ - fake-` + service + `-vse5
+   Status    : completed
+Nats created
+Running bootstraps:
+ - Bootstrap fake-` + service + `-web-1
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				r := routerEvent{}
@@ -227,7 +240,7 @@ func Test2VSE(t *testing.T) {
 				So(na.RouterName, ShouldEqual, "vse5")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
 				Printf("\n        And it configures from 1.1.1.1/24:8000 to 10.254.254.100:8000")
-				So(na.NatRules[0].Network, ShouldEqual, "fake")
+				So(na.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[0].OriginIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[0].OriginPort, ShouldEqual, "8000")
 				So(na.NatRules[0].Type, ShouldEqual, "dnat")
@@ -235,7 +248,7 @@ func Test2VSE(t *testing.T) {
 				So(na.NatRules[0].TranslationPort, ShouldEqual, "8000")
 				So(na.NatRules[0].Protocol, ShouldEqual, "tcp")
 				Printf("\n        And it configures from 1.1.1.1/24:22 to 10.254.254.100:22")
-				So(na.NatRules[1].Network, ShouldEqual, "fake")
+				So(na.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[1].OriginIP, ShouldEqual, "1.1.1.1")
 				So(na.NatRules[1].OriginPort, ShouldEqual, "22")
 				So(na.NatRules[1].Type, ShouldEqual, "dnat")
@@ -243,7 +256,7 @@ func Test2VSE(t *testing.T) {
 				So(na.NatRules[1].TranslationPort, ShouldEqual, "22")
 				So(na.NatRules[1].Protocol, ShouldEqual, "tcp")
 				Printf("\n        And it configures from 10.254.254.0/24:any to 1.1.1.1:any")
-				So(na.NatRules[2].Network, ShouldEqual, "fake")
+				So(na.NatRules[2].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[2].OriginIP, ShouldEqual, "10.254.254.0/24")
 				So(na.NatRules[2].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[2].Type, ShouldEqual, "snat")
@@ -251,7 +264,7 @@ func Test2VSE(t *testing.T) {
 				So(na.NatRules[2].TranslationPort, ShouldEqual, "any")
 				So(na.NatRules[2].Protocol, ShouldEqual, "any")
 				Printf("\n        And it configures from 10.1.0.0/24:any to 1.1.1.1:any")
-				So(na.NatRules[3].Network, ShouldEqual, "fake")
+				So(na.NatRules[3].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[3].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(na.NatRules[3].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[3].Type, ShouldEqual, "snat")
@@ -277,19 +290,36 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-web-2"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating firewalls:
+ - fake-` + service + `-vse5
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse5
+   Status    : completed
+Nats updated
+Running bootstraps:
+ - Bootstrap fake-` + service + `-web-2
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -355,16 +385,22 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 5)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Running executions"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fake-` + service + `-vse5
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse5
+   Status    : completed
+Nats updated
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 			//TODO : we may need to check executions here
@@ -380,19 +416,36 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-db-1"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-db-1"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.1.0.21
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.1.0.21
+   Status    : completed
+Instances successfully updated
+Updating firewalls:
+ - fake-` + service + `-vse5
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse5
+   Status    : completed
+Nats updated
+Running bootstraps:
+ - Bootstrap fake-` + service + `-db-1
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution db 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -457,18 +510,27 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[6] = "Instances deleted"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances deleted
+Updating firewalls:
+ - fake-` + service + `-vse5
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse5
+   Status    : completed
+Nats updated
+Running executions:
+ - Cleanup Bootstrap fake-` + service + `-web-2
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 1.1.1.1`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 		})
