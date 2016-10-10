@@ -20,7 +20,7 @@ Feature: Service destroy
   Scenario: Logged service destroy
     Given I setup ernest with target "https://ernest.local"
     And I'm logged in as "usr" / "pwd"
-    And The datacenter "test_dc" does not exist
+    And the datacenter "test_dc" does not exist
     And I run ernest with "datacenter create aws --token tmp_token --secret tmp_secret --region tmp_region --fake test_dc"
     And The service "destroyable" does not exist
     And I run ernest with "service apply internal/definitions/destroyable.yml"
