@@ -24,6 +24,7 @@ func TestAWSHappyPath(t *testing.T) {
 	inSub := make(chan *nats.Msg, 1)
 	fiSub := make(chan *nats.Msg, 1)
 	naSub := make(chan *nats.Msg, 1)
+	lbSub := make(chan *nats.Msg, 1)
 
 	basicSetup("aws")
 
@@ -657,6 +658,52 @@ SUCCESS: rules successfully applied`
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 				So(event.NetworkIsPublic, ShouldBeFalse)
+			})
+			waitToDone()
+		})
+
+		Convey("When I apply aws13.yml", func() {
+			f := getDefinitionPathAWS("aws13.yml", service)
+			subLBC, _ := n.ChanSubscribe("elb.create.aws-fake", lbSub)
+			o, err := ernest("service", "apply", f)
+			Convey("Then it should create the new elb-1 elb", func() {
+				if err != nil {
+					log.Println(err.Error())
+				} else {
+					expected := `Starting environment creation
+Creating ELBs:
+ - fakeaws-` + service + `-elb-1
+   Status    : completed
+   DNS    : fake-dns-name
+ELBs created
+SUCCESS: rules successfully applied`
+
+					So(strings.Contains(o, expected), ShouldBeTrue)
+				}
+
+				eventLB := awsELBEvent{}
+
+				msg, err := waitMsg(lbSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventLB)
+				subLBC.Unsubscribe()
+
+				Info("And should call elb creator connector with valid fields", " ", 6)
+				So(eventLB.Type, ShouldEqual, "aws-fake")
+				So(eventLB.DatacenterRegion, ShouldEqual, "fake")
+				So(eventLB.DatacenterToken, ShouldEqual, "fake")
+				So(eventLB.DatacenterSecret, ShouldEqual, "secret")
+				So(eventLB.VpcID, ShouldEqual, "fakeaws")
+				So(len(eventLB.InstanceNames), ShouldEqual, 1)
+				So(len(eventLB.InstanceAWSIDs), ShouldEqual, 1)
+				So(len(eventLB.SecurityGroupAWSIDs), ShouldEqual, 1)
+				So(eventLB.InstanceNames[0], ShouldEqual, "fakeaws-"+service+"-web-1")
+				So(eventLB.SecurityGroupAWSIDs[0], ShouldEqual, "foo")
+				So(len(eventLB.Listeners), ShouldEqual, 1)
+				So(eventLB.Listeners[0].ToPort, ShouldEqual, 80)
+				So(eventLB.Listeners[0].FromPort, ShouldEqual, 80)
+				So(eventLB.Listeners[0].Protocol, ShouldEqual, "HTTP")
+				So(eventLB.Listeners[0].SSLCert, ShouldEqual, "")
 			})
 			waitToDone()
 		})
