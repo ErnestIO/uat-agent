@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -37,20 +36,19 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-stg-1"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-stg-1"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-stg-1
+   IP        : 10.2.0.90
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-stg-1
+   IP        : 10.2.0.90
+   Status    : completed
+Instances successfully updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -93,20 +91,18 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-stg-2"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-stg-2"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-stg-2
+   IP        : 10.2.0.91
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-stg-2
+   IP        : 10.2.0.91
+   Status    : completed
+Instances successfully updated`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -176,20 +172,19 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-dev-1"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-dev-1"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
-
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-dev-1
+   IP        : 10.1.0.90
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-dev-1
+   IP        : 10.1.0.90
+   Status    : completed
+Instances successfully updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -255,18 +250,14 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-stg-2"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fake-` + service + `-stg-2
+   IP        : 10.2.0.91
+   Status    : completed
+Instances deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("And it will delete stg-2 instance", " ", 8)
@@ -307,18 +298,14 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-stg-1"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fake-` + service + `-stg-1
+   IP        : 10.2.0.90
+   Status    : completed
+Instances deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 
