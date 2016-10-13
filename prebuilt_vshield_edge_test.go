@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -17,7 +16,7 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestPrebuiltVshieldEdge(t *testing.T) {
+func TestPreVSE(t *testing.T) {
 	var service = "novse"
 
 	service2 := service + "II" + strconv.Itoa(rand.Intn(1000))
@@ -50,29 +49,33 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 18)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.1.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Creating instances:"
-					checkLines[8] = "\t - fake-" + service + "-web-1"
-					checkLines[9] = "Instances successfully created"
-					checkLines[10] = "Updating instances:"
-					checkLines[11] = "\t - fake-" + service + "-web-1"
-					checkLines[12] = "Instances successfully updated"
-					checkLines[13] = "Setting up firewalls:"
-					checkLines[14] = "Firewalls Created"
-					checkLines[15] = "Configuring nats"
-					checkLines[16] = "Nats Created"
-					checkLines[17] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fake-` + service + `-web
+   IP     : 10.1.0.0/24
+   Status : completed
+Networks successfully created
+Creating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully updated
+Creating firewalls:
+ - fake-` + service + `-vse2
+   Status    : completed
+Firewalls created
+Creating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats created
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n := networkEvent{}
@@ -168,7 +171,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(na.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
 				So(na.NatName, ShouldEqual, "fake-"+service+"-vse2")
 				So(len(na.NatRules), ShouldEqual, 2)
-				So(na.NatRules[0].Network, ShouldEqual, "fake")
+				So(na.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[0].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(na.NatRules[0].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[0].Type, ShouldEqual, "snat")
@@ -197,18 +200,18 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating firewalls:"
-					checkLines[5] = "Firewalls Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fake-` + service + `-vse2
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("Then I should receive a valid firewall.update.vcloud-fake", " ", 8)
@@ -247,18 +250,14 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Configuring nats"
-					checkLines[5] = "Nats Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("Then I should receive a valid nats.update.vcloud-fake", " ", 8)
@@ -277,7 +276,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(event.NatName, ShouldEqual, "fake-"+service+"-vse2")
 				So(len(event.NatRules), ShouldEqual, 3)
 				Printf("\n        And it will forward port 22 to 10.1.0.12 ")
-				So(event.NatRules[2].Network, ShouldEqual, "fake")
+				So(event.NatRules[2].Network, ShouldEqual, "NETWORK")
 				So(event.NatRules[2].TranslationIP, ShouldEqual, "10.1.0.12")
 				So(event.NatRules[2].TranslationPort, ShouldEqual, "22")
 				So(event.NatRules[2].OriginIP, ShouldEqual, "172.16.186.61")
@@ -300,22 +299,24 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[6] = "Instances successfully created"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-web-2"
-					checkLines[9] = "Instances successfully updated"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -380,20 +381,22 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[7] = "Instances successfully updated"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -458,20 +461,22 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[7] = "Instances successfully updated"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -540,20 +545,22 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 9)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-1"
-					checkLines[6] = "\t - fake-" + service + "-web-2"
-					checkLines[7] = "Instances successfully updated"
-					checkLines[8] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fake-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -623,21 +630,19 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 10)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "	- 10.2.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Configuring nats"
-					checkLines[8] = "Nats Updated"
-					checkLines[9] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fake-` + service + `-db
+   IP     : 10.2.0.0/24
+   Status : completed
+Networks successfully created
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n := networkEvent{}
@@ -674,7 +679,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(na.NatName, ShouldEqual, "fake-"+service+"-vse2")
 				So(len(na.NatRules), ShouldEqual, 4)
 				Printf("\n        And it will create a snat for the new network ")
-				So(na.NatRules[1].Network, ShouldEqual, "fake")
+				So(na.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[1].OriginIP, ShouldEqual, "10.2.0.0/24")
 				So(na.NatRules[1].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[1].Type, ShouldEqual, "snat")
@@ -702,22 +707,24 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service + "-db-1"
-					checkLines[6] = "Instances successfully created"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service + "-db-1"
-					checkLines[9] = "Instances successfully updated"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances successfully updated
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -782,19 +789,19 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-web-2"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fake-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances deleted
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -837,19 +844,19 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 8)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service + "-db-1"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fake-` + service + `-db-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances deleted
+Updating nats:
+ - fake-` + service + `-vse2
+   Status    : completed
+Nats updated
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -895,36 +902,50 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 25)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.254.254.0/24"
-					checkLines[6] = "\t- 10.1.0.0/24"
-					checkLines[7] = "Networks successfully created"
-					checkLines[8] = "Creating instances:"
-					checkLines[9] = "\t - fake-" + service2 + "-salt-master"
-					checkLines[10] = "\t - fake-" + service2 + "-web-1"
-					checkLines[11] = "Instances successfully created"
-					checkLines[12] = "Updating instances:"
-					checkLines[13] = "\t - fake-" + service2 + "-salt-master"
-					checkLines[14] = "\t - fake-" + service2 + "-web-1"
-					checkLines[15] = "Instances successfully updated"
-					checkLines[16] = "Setting up firewalls:"
-					checkLines[17] = "Firewalls Created"
-					checkLines[18] = "Configuring nats"
-					checkLines[19] = "Nats Created"
-					checkLines[20] = "Bootstrapping"
-					checkLines[21] = "Instances bootstrapped"
-					checkLines[22] = "Running executions"
-					checkLines[23] = "Executions ran"
-					checkLines[24] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fake-` + service2 + `-salt
+   IP     : 10.254.254.0/24
+   Status : completed
+ - fake-` + service2 + `-web
+   IP     : 10.1.0.0/24
+   Status : completed
+Networks successfully created
+Creating instances:
+ - fake-` + service2 + `-salt-master
+   IP        : 10.254.254.100
+   Status    : completed
+ - fake-` + service2 + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service2 + `-salt-master
+   IP        : 10.254.254.100
+   Status    : completed
+ - fake-` + service2 + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully updated
+Creating firewalls:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Firewalls created
+Creating nats:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Nats created
+Running bootstraps:
+ - Bootstrap fake-` + service2 + `-web-1
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n1 := networkEvent{}
@@ -1104,7 +1125,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(len(na.NatRules), ShouldEqual, 4)
 
 				Info("And it will forward 172.16.186.44:8000 to 10.254.254.100:8000 ", " ", 8)
-				So(na.NatRules[0].Network, ShouldEqual, "fake")
+				So(na.NatRules[0].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[0].OriginIP, ShouldEqual, "172.16.186.44")
 				So(na.NatRules[0].OriginPort, ShouldEqual, "8000")
 				So(na.NatRules[0].Type, ShouldEqual, "dnat")
@@ -1113,7 +1134,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(na.NatRules[0].Protocol, ShouldEqual, "tcp")
 
 				Info("And it will forward 172.16.186.44:22 to 10.254.254.100:22 ", " ", 8)
-				So(na.NatRules[1].Network, ShouldEqual, "fake")
+				So(na.NatRules[1].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[1].OriginIP, ShouldEqual, "172.16.186.44")
 				So(na.NatRules[1].OriginPort, ShouldEqual, "22")
 				So(na.NatRules[1].Type, ShouldEqual, "dnat")
@@ -1122,7 +1143,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(na.NatRules[1].Protocol, ShouldEqual, "tcp")
 
 				Info("And it will pat 10.254.254.0/24:any to 172.16.186.44 ", " ", 8)
-				So(na.NatRules[2].Network, ShouldEqual, "fake")
+				So(na.NatRules[2].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[2].OriginIP, ShouldEqual, "10.254.254.0/24")
 				So(na.NatRules[2].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[2].Type, ShouldEqual, "snat")
@@ -1131,7 +1152,7 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				So(na.NatRules[2].Protocol, ShouldEqual, "any")
 
 				Info("And it will pat 10.1.0.0/24:any to 172.16.186.44 ", " ", 8)
-				So(na.NatRules[3].Network, ShouldEqual, "fake")
+				So(na.NatRules[3].Network, ShouldEqual, "NETWORK")
 				So(na.NatRules[3].OriginIP, ShouldEqual, "10.1.0.0/24")
 				So(na.NatRules[3].OriginPort, ShouldEqual, "any")
 				So(na.NatRules[3].Type, ShouldEqual, "snat")
@@ -1145,22 +1166,20 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
-				So(ex.DatacenterName, ShouldEqual, "fake")
 				So(ex.Service, ShouldNotEqual, "")
 				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-1")
-				So(ex.ExecutionType, ShouldEqual, "salt")
+				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.11")
 				So(ex.ExecutionTarget, ShouldEqual, "list:salt-master.localdomain")
 				So(ex.ServiceOptions.User, ShouldEqual, salt.User)
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 
 				Info("And it will run the execution on the web node", " ", 8)
-				So(ex2.DatacenterName, ShouldEqual, "fake")
 				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
-				So(ex2.ExecutionType, ShouldEqual, "salt")
+				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
 				So(ex2.ExecutionTarget, ShouldEqual, "list:fake-"+service2+"-web-1")
 				So(ex2.ServiceOptions.User, ShouldEqual, salt.User)
@@ -1187,26 +1206,36 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 15)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service2 + "-web-2"
-					checkLines[6] = "Instances successfully created"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service2 + "-web-2"
-					checkLines[9] = "Instances successfully updated"
-					checkLines[10] = "Bootstrapping"
-					checkLines[11] = "Instances bootstrapped"
-					checkLines[12] = "Running executions"
-					checkLines[13] = "Executions ran"
-					checkLines[14] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service2 + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service2 + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully updated
+Updating firewalls:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Nats updated
+Running bootstraps:
+ - Bootstrap fake-` + service2 + `-web-2
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -1245,22 +1274,20 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 				Info("Then I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
-				So(ex.DatacenterName, ShouldEqual, "fake")
 				So(ex.Service, ShouldNotEqual, "")
 				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-2")
-				So(ex.ExecutionType, ShouldEqual, "salt")
+				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.12")
 				So(ex.ExecutionTarget, ShouldEqual, "list:salt-master.localdomain")
 				So(ex.ServiceOptions.User, ShouldEqual, salt.User)
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 
 				Info("And it will run the execution on the web node ", " ", 8)
-				So(ex2.DatacenterName, ShouldEqual, "fake")
 				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
-				So(ex2.ExecutionType, ShouldEqual, "salt")
+				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
 				So(ex2.ExecutionTarget, ShouldEqual, "list:fake-"+service2+"-web-2")
 				So(ex2.ServiceOptions.User, ShouldEqual, salt.User)
@@ -1282,18 +1309,22 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 7)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Running executions"
-					checkLines[5] = "Executions ran"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Nats updated
+Running executions:
+ - Execution web 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := executionEvent{}
@@ -1303,11 +1334,10 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will run the updated execution on both web nodes ", " ", 8)
-				So(event.DatacenterName, ShouldEqual, "fake")
 				So(event.Service, ShouldNotEqual, "")
 				So(event.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(event.Name, ShouldEqual, "Execution web 1")
-				So(event.ExecutionType, ShouldEqual, "salt")
+				So(event.ExecutionType, ShouldEqual, "fake")
 				So(event.ExecutionPayload, ShouldEqual, "date; uptime")
 				So(event.ExecutionTarget, ShouldEqual, "list:fake-"+service2+"-web-1,fake-"+service2+"-web-2")
 				So(event.ServiceOptions.User, ShouldEqual, salt.User)
@@ -1329,26 +1359,36 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 15)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fake-" + service2 + "-db-1"
-					checkLines[6] = "Instances successfully created"
-					checkLines[7] = "Updating instances:"
-					checkLines[8] = "\t - fake-" + service2 + "-db-1"
-					checkLines[9] = "Instances successfully updated"
-					checkLines[10] = "Bootstrapping"
-					checkLines[11] = "Instances bootstrapped"
-					checkLines[12] = "Running executions"
-					checkLines[13] = "Executions ran"
-					checkLines[14] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fake-` + service2 + `-db-1
+   IP        : 10.1.0.21
+   Status    : completed
+Instances successfully created
+Updating instances:
+ - fake-` + service2 + `-db-1
+   IP        : 10.1.0.21
+   Status    : completed
+Instances successfully updated
+Updating firewalls:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Nats updated
+Running bootstraps:
+ - Bootstrap fake-` + service2 + `-db-1
+   Status    : completed
+Bootstrap ran
+Running executions:
+ - Execution db 1
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("And I should receive a valid instance.create.vcloud-fake", " ", 8)
@@ -1388,21 +1428,19 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				json.Unmarshal(msg.Data, &ex2)
 
 				Info("And it will bootstrap the db node ", " ", 8)
-				So(ex.DatacenterName, ShouldEqual, "fake")
 				So(ex.Service, ShouldNotEqual, "")
 				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-db-1")
-				So(ex.ExecutionType, ShouldEqual, "salt")
+				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.21")
 				So(ex.ExecutionTarget, ShouldEqual, "list:salt-master.localdomain")
 				So(ex.ServiceOptions.User, ShouldEqual, salt.User)
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 				Printf("\n        And it will run the execution on the db node ")
-				So(ex2.DatacenterName, ShouldEqual, "fake")
 				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution db 1")
-				So(ex2.ExecutionType, ShouldEqual, "salt")
+				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
 				So(ex2.ExecutionTarget, ShouldEqual, "list:fake-"+service2+"-db-1")
 				So(ex2.ServiceOptions.User, ShouldEqual, salt.User)
@@ -1425,21 +1463,27 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 10)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fake-" + service2 + "-web-2"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "Running executions"
-					checkLines[8] = "Executions ran"
-					checkLines[9] = "SUCCESS: rules successfully applied"
-					vo := CheckOutput(lines, checkLines)
-
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fake-` + service2 + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances deleted
+Updating firewalls:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Firewalls updated
+Updating nats:
+ - fake-` + service2 + `-vse2
+   Status    : completed
+Nats updated
+Running executions:
+ - Cleanup Bootstrap fake-` + service2 + `-web-2
+   Status    : completed
+Executions ran
+SUCCESS: rules successfully applied
+Your environment endpoint is: 172.16.186.44`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("And I should receive a valid instance.delete.vcloud-fake", " ", 8)
@@ -1475,11 +1519,10 @@ func TestPrebuiltVshieldEdge(t *testing.T) {
 				json.Unmarshal(msg.Data, &ex)
 
 				Info("And it will remove web-2's key from the salt master ", " ", 8)
-				So(ex.DatacenterName, ShouldEqual, "fake")
 				So(ex.Service, ShouldNotEqual, "")
 				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Cleanup Bootstrap fake-"+service2+"-web-2")
-				So(ex.ExecutionType, ShouldEqual, "salt")
+				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldEqual, "salt-key -y -d fake-"+service2+"-web-2")
 				So(ex.ExecutionTarget, ShouldEqual, "list:salt-master.localdomain")
 				So(ex.ServiceOptions.User, ShouldEqual, salt.User)

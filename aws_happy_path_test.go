@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"strings"
 	"testing"
@@ -42,24 +41,29 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 20)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.1.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Setting up firewalls:"
-					checkLines[8] = "Firewalls Created"
-					checkLines[9] = "Creating instances:"
-					checkLines[10] = "\t - fakeaws-" + service + "-web-1"
-					checkLines[11] = "Instances successfully created"
-					checkLines[12] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating Vpc:
+ - fakeaws
+   Subnet    : 1.1.1.1/24
+   Status    : completed
+Vpc created
+Creating networks:
+ - fakeaws-` + service + `-web
+   IP     : 10.1.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks successfully created
+Creating firewalls:
+ - fakeaws-` + service + `-web-sg-1
+   Status    : completed
+Firewalls created
+Creating instances:
+ - fakeaws-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully created
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -133,19 +137,14 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 15)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating instances:"
-					checkLines[5] = "\t - fakeaws-" + service + "-web-2"
-					checkLines[6] = "Instances successfully created"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating instances:
+ - fakeaws-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances successfully created
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -180,19 +179,14 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fakeaws-" + service + "-web-2"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fakeaws-` + service + `-web-2
+   IP        : 10.1.0.12
+   Status    : completed
+Instances deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -227,19 +221,14 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating instances:"
-					checkLines[5] = "\t - fakeaws-" + service + "-web-1"
-					checkLines[6] = "Instances successfully updated"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating instances:
+ - fakeaws-` + service + `-web-1
+   IP        : 10.1.0.11
+   Status    : completed
+Instances successfully updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -273,18 +262,13 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating firewalls:"
-					checkLines[5] = "Firewalls Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fakeaws-` + service + `-web-sg-1
+   Status    : completed
+Firewalls updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -328,18 +312,13 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating firewalls:"
-					checkLines[5] = "Firewalls Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fakeaws-` + service + `-web-sg-1
+   Status    : completed
+Firewalls updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -387,18 +366,13 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Updating firewalls:"
-					checkLines[5] = "Firewalls Updated"
-					checkLines[6] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Updating firewalls:
+ - fakeaws-` + service + `-web-sg-1
+   Status    : completed
+Firewalls updated
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -438,19 +412,15 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.2.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fakeaws-` + service + `-bknd
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks successfully created
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -479,19 +449,15 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 11)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting networks:"
-					checkLines[5] = "\t- 10.2.0.0/24"
-					checkLines[6] = "Networks deleted"
-					checkLines[7] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting networks:
+ - fakeaws-` + service + `-bknd
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -522,23 +488,20 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 13)
-					// println(o)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.2.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Creating instances:"
-					checkLines[8] = "\t - fakeaws-" + service + "-bknd-1"
-					checkLines[9] = "Instances successfully created"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fakeaws-` + service + `-bknd
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks successfully created
+Creating instances:
+ - fakeaws-` + service + `-bknd-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances successfully created
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -586,23 +549,20 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 13)
-					//println(o)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Deleting instances:"
-					checkLines[5] = "\t - fakeaws-" + service + "-bknd-1"
-					checkLines[6] = "Instances deleted"
-					checkLines[7] = "Deleting networks:"
-					checkLines[8] = "\t- 10.2.0.0/24"
-					checkLines[9] = "Networks deleted"
-					checkLines[10] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Deleting instances:
+ - fakeaws-` + service + `-bknd-1
+   IP        : 10.2.0.11
+   Status    : completed
+Instances deleted
+Deleting networks:
+ - fakeaws-` + service + `-bknd
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -649,22 +609,19 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					lines := strings.Split(o, "\n")
-					checkLines := make([]string, 13)
-					//println(o)
-
-					checkLines[0] = "Environment creation requested"
-					checkLines[4] = "Creating networks:"
-					checkLines[5] = "\t- 10.2.0.0/24"
-					checkLines[6] = "Networks successfully created"
-					checkLines[7] = "Configuring nats"
-					checkLines[8] = "Nats Created"
-					checkLines[9] = "SUCCESS: rules successfully applied"
-
-					vo := CheckOutput(lines, checkLines)
-					if os.Getenv("CHECK_OUTPUT") != "" {
-						So(vo, ShouldEqual, true)
-					}
+					expected := `Starting environment creation
+Creating networks:
+ - fakeaws-` + service + `-db
+   IP     : 10.2.0.0/24
+   AWS ID : foo
+   Status : completed
+Networks successfully created
+Creating nats:
+ - fakeaws-` + service + `-db-nat
+   Status    : completed
+Nats created
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
