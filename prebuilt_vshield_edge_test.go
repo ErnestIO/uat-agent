@@ -65,11 +65,11 @@ Updating instances:
    IP        : 10.1.0.11
    Status    : completed
 Instances successfully updated
-Creating firewall:
+Creating firewalls:
  - fake-` + service + `-vse2
    Status    : completed
 Firewalls created
-Creating firewall:
+Creating nats:
  - fake-` + service + `-vse2
    Status    : completed
 Nats created
@@ -790,7 +790,7 @@ Your environment endpoint is: 172.16.186.44`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
    Status    : completed
@@ -845,7 +845,7 @@ Your environment endpoint is: 172.16.186.44`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service + `-db-1
    IP        : 10.2.0.11
    Status    : completed
@@ -927,11 +927,11 @@ Updating instances:
    IP        : 10.1.0.11
    Status    : completed
 Instances successfully updated
-Creating firewall:
+Creating firewalls:
  - fake-` + service2 + `-vse2
    Status    : completed
 Firewalls created
-Creating firewall:
+Creating nats:
  - fake-` + service2 + `-vse2
    Status    : completed
 Nats created
@@ -1464,7 +1464,7 @@ Your environment endpoint is: 172.16.186.44`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service2 + `-web-2
    IP        : 10.1.0.12
    Status    : completed

@@ -73,11 +73,11 @@ Updating instances:
    IP        : 10.1.0.11
    Status    : completed
 Instances successfully updated
-Creating firewall:
+Creating firewalls:
  - fake-` + service + `-vse5
    Status    : completed
 Firewalls created
-Creating firewall:
+Creating nats:
  - fake-` + service + `-vse5
    Status    : completed
 Nats created
@@ -511,7 +511,7 @@ Your environment endpoint is: 1.1.1.1`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
    Status    : completed

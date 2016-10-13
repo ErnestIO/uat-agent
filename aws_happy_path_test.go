@@ -616,7 +616,7 @@ Creating networks:
    AWS ID : foo
    Status : completed
 Networks successfully created
-Creating firewall:
+Creating nats:
  - fakeaws-` + service + `-db-nat
    Status    : completed
 Nats created

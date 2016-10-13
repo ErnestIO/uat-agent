@@ -53,7 +53,8 @@ func TestVSE(t *testing.T) {
 					log.Println(err.Error())
 				} else {
 
-					expected := `Creating routers:
+					expected := `Starting environment creation
+Creating routers:
  - vse4
    Status    : completed
 Routers created
@@ -72,16 +73,15 @@ Updating instances:
    IP        : 10.1.0.11
    Status    : completed
 Instances successfully updated
-Creating firewall:
+Creating firewalls:
  - fake-` + service + `-vse4
    Status    : completed
 Firewalls created
-Creating firewall:
+Creating nats:
  - fake-` + service + `-vse4
    Status    : completed
 Nats created
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 				r := routerEvent{}
@@ -883,7 +883,7 @@ Your environment endpoint is: 1.1.1.1`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
    Status    : completed
@@ -893,7 +893,7 @@ Updating nats:
    Status    : completed
 Nats updated
 SUCCESS: rules successfully applied
-Your environment`
+Your environment endpoint is: 1.1.1.1`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -937,7 +937,7 @@ Your environment`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fake-` + service + `-db-1
    IP        : 10.2.0.11
    Status    : completed
@@ -991,7 +991,7 @@ Your environment endpoint is: 1.1.1.1`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment deletion
-Deleting instances
+Deleting instances:
  - fake-` + service + `-web-1
    IP        : 10.1.0.11
    Status    : completed
