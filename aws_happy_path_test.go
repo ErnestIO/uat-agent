@@ -42,9 +42,9 @@ func TestAWSHappyPath(t *testing.T) {
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Creating firewall:
+Creating Vpc:
  - fakeaws
- - Subnet    : 1.1.1.1/24
+   Subnet    : 1.1.1.1/24
    Status    : completed
 Vpc created
 Creating networks:
@@ -53,7 +53,7 @@ Creating networks:
    AWS ID : foo
    Status : completed
 Networks successfully created
-Creating firewall:
+Creating firewalls:
  - fakeaws-` + service + `-web-sg-1
    Status    : completed
 Firewalls created
@@ -180,7 +180,7 @@ SUCCESS: rules successfully applied`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fakeaws-` + service + `-web-2
    IP        : 10.1.0.12
    Status    : completed
@@ -550,7 +550,7 @@ SUCCESS: rules successfully applied`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Deleting instances
+Deleting instances:
  - fakeaws-` + service + `-bknd-1
    IP        : 10.2.0.11
    Status    : completed
