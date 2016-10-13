@@ -9,12 +9,9 @@ deps:
 	go get github.com/smartystreets/goconvey/convey
 	go get github.com/golang/lint/golint
 	go get github.com/jwilder/dockerize
-	go get github.com/gucumber/gucumber/cmd/gucumber
-	go get github.com/ernestio/ernest-config-client
 
 test:
 	go test -v
-	gucumber
 
 lint:
 	golint ./...
