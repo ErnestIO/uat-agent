@@ -694,6 +694,7 @@ SUCCESS: rules successfully applied`
 				So(eventLB.DatacenterToken, ShouldEqual, "fake")
 				So(eventLB.DatacenterSecret, ShouldEqual, "secret")
 				So(eventLB.VpcID, ShouldEqual, "fakeaws")
+				So(eventLB.Name, ShouldEqual, "fakeaws-"+service+"-elb-1")
 				So(len(eventLB.InstanceNames), ShouldEqual, 1)
 				So(len(eventLB.InstanceAWSIDs), ShouldEqual, 1)
 				So(len(eventLB.SecurityGroupAWSIDs), ShouldEqual, 1)
@@ -740,6 +741,7 @@ SUCCESS: rules successfully applied`
 				So(eventLB.DatacenterToken, ShouldEqual, "fake")
 				So(eventLB.DatacenterSecret, ShouldEqual, "secret")
 				So(eventLB.VpcID, ShouldEqual, "fakeaws")
+				So(eventLB.Name, ShouldEqual, "fakeaws-"+service+"-elb-1")
 				So(len(eventLB.InstanceNames), ShouldEqual, 1)
 				So(len(eventLB.InstanceAWSIDs), ShouldEqual, 1)
 				So(len(eventLB.SecurityGroupAWSIDs), ShouldEqual, 1)
@@ -754,6 +756,42 @@ SUCCESS: rules successfully applied`
 				So(eventLB.Listeners[1].FromPort, ShouldEqual, 443)
 				So(eventLB.Listeners[1].Protocol, ShouldEqual, "HTTPS")
 				So(eventLB.Listeners[1].SSLCert, ShouldEqual, "foo")
+			})
+			waitToDone()
+		})
+
+		Convey("When I apply aws15.yml", func() {
+			f := getDefinitionPathAWS("aws15.yml", service)
+			subLBD, _ := n.ChanSubscribe("elb.delete.aws-fake", lbSub)
+			o, err := ernest("service", "apply", f)
+			Convey("Then it should delete the elb-1 elb", func() {
+				if err != nil {
+					log.Println(err.Error())
+				} else {
+					expected := `Starting environment creation
+Deleting ELBs:
+ - fakeaws-` + service + `-elb-1
+   Status    : completed
+   DNS    : fake-dns-name
+ELBs deleted
+SUCCESS: rules successfully applied`
+					So(strings.Contains(o, expected), ShouldBeTrue)
+				}
+
+				eventLB := awsELBEvent{}
+
+				msg, err := waitMsg(lbSub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventLB)
+				subLBD.Unsubscribe()
+
+				Info("And should call elb updater connector with valid fields", " ", 6)
+				So(eventLB.Type, ShouldEqual, "aws-fake")
+				So(eventLB.DatacenterRegion, ShouldEqual, "fake")
+				So(eventLB.DatacenterToken, ShouldEqual, "fake")
+				So(eventLB.DatacenterSecret, ShouldEqual, "secret")
+				So(eventLB.VpcID, ShouldEqual, "fakeaws")
+				So(eventLB.Name, ShouldEqual, "fakeaws-"+service+"-elb-1")
 			})
 			waitToDone()
 		})
