@@ -265,7 +265,7 @@ repos:
 
   - name: generic-adapter
     path: git@github.com:ernestio/generic-adapter.git
-    branch: master
+    branch: develop
     links:
       - nats
     depends:
@@ -275,7 +275,7 @@ repos:
 
   - name: generic-builder
     path: git@github.com:ernestio/generic-builder.git
-    branch: master
+    branch: develop
     links:
       - nats
       - redis

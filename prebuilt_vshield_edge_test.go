@@ -205,10 +205,6 @@ Updating firewalls:
  - fake-` + service + `-vse2
    Status    : completed
 Firewalls updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -310,10 +306,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -390,10 +382,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -470,10 +458,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -554,10 +538,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -718,10 +698,6 @@ Updating instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances successfully updated
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -795,10 +771,6 @@ Deleting instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances deleted
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -850,10 +822,6 @@ Deleting instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances deleted
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
 SUCCESS: rules successfully applied
 Your environment endpoint is: 172.16.186.44`
 					So(strings.Contains(o, expected), ShouldBeTrue)
@@ -1217,14 +1185,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating firewalls:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Nats updated
 Running bootstraps:
  - Bootstrap fake-` + service2 + `-web-2
    Status    : completed
@@ -1310,14 +1270,6 @@ Your environment endpoint is: 172.16.186.44`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Updating firewalls:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Nats updated
 Running executions:
  - Execution web 1
    Status    : completed
@@ -1370,14 +1322,6 @@ Updating instances:
    IP        : 10.1.0.21
    Status    : completed
 Instances successfully updated
-Updating firewalls:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Nats updated
 Running bootstraps:
  - Bootstrap fake-` + service2 + `-db-1
    Status    : completed
@@ -1469,14 +1413,6 @@ Deleting instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances deleted
-Updating firewalls:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Nats updated
 Running executions:
  - Cleanup Bootstrap fake-` + service2 + `-web-2
    Status    : completed

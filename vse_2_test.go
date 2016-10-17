@@ -301,14 +301,6 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-Updating firewalls:
- - fake-` + service + `-vse5
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service + `-vse5
-   Status    : completed
-Nats updated
 Running bootstraps:
  - Bootstrap fake-` + service + `-web-2
    Status    : completed
@@ -386,14 +378,6 @@ Your environment endpoint is: 1.1.1.1`
 					log.Println(err.Error())
 				} else {
 					expected := `Starting environment creation
-Updating firewalls:
- - fake-` + service + `-vse5
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service + `-vse5
-   Status    : completed
-Nats updated
 Running executions:
  - Execution web 1
    Status    : completed
@@ -427,14 +411,6 @@ Updating instances:
    IP        : 10.1.0.21
    Status    : completed
 Instances successfully updated
-Updating firewalls:
- - fake-` + service + `-vse5
-   Status    : completed
-Firewalls updated
-Updating nats:
- - fake-` + service + `-vse5
-   Status    : completed
-Nats updated
 Running bootstraps:
  - Bootstrap fake-` + service + `-db-1
    Status    : completed
@@ -520,10 +496,6 @@ Updating firewalls:
  - fake-` + service + `-vse5
    Status    : completed
 Firewalls updated
-Updating nats:
- - fake-` + service + `-vse5
-   Status    : completed
-Nats updated
 Running executions:
  - Cleanup Bootstrap fake-` + service + `-web-2
    Status    : completed
