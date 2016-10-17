@@ -157,7 +157,6 @@ type executionEvent struct {
 	Service          string         `json:"service_id"`
 	ServiceName      string         `json:"service_name"`
 	ServiceType      string         `json:"service_type"`
-	ServiceEndPoint  string         `json:"service_endpoint"`
 	ServiceOptions   serviceOptions `json:"service_options"`
 	ExecutionType    string         `json:"execution_type"`
 	ExecutionPayload string         `json:"execution_payload"`

@@ -225,6 +225,7 @@ SUCCESS: rules successfully applied`
 			subNe.Unsubscribe()
 			subFi.Unsubscribe()
 			subNa.Unsubscribe()
+			waitToDone()
 		})
 
 		Convey("When I apply a valid vse2.yml definition", func() {
@@ -243,8 +244,7 @@ Updating firewalls:
  - fake-` + service + `-vse4
    Status    : completed
 Firewalls updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 				event := firewallEvent{}
@@ -273,6 +273,7 @@ Your environment endpoint is: 1.1.1.1`
 			})
 
 			subFi.Unsubscribe()
+			waitToDone()
 		})
 
 		Convey("When I apply a valid vse3.yml definition", func() {
@@ -291,8 +292,7 @@ Updating nats:
  - fake-` + service + `-vse4
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -367,8 +367,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -445,8 +444,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -695,8 +693,7 @@ Updating nats:
  - fake-` + service + `-vse4
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -789,8 +786,7 @@ Updating instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -864,8 +860,7 @@ Deleting instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -914,8 +909,7 @@ Deleting instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 

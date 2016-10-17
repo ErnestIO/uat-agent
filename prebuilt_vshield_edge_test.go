@@ -73,8 +73,7 @@ Creating nats:
  - fake-` + service + `-vse2
    Status    : completed
 Nats created
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -205,8 +204,7 @@ Updating firewalls:
  - fake-` + service + `-vse2
    Status    : completed
 Firewalls updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -251,8 +249,7 @@ Updating nats:
  - fake-` + service + `-vse2
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -306,8 +303,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -382,8 +378,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -458,8 +453,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -538,8 +532,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -620,8 +613,7 @@ Updating nats:
  - fake-` + service + `-vse2
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -698,8 +690,7 @@ Updating instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -771,8 +762,7 @@ Deleting instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -822,8 +812,7 @@ Deleting instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -911,8 +900,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -1135,7 +1123,6 @@ Your environment endpoint is: 172.16.186.44`
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
 				So(ex.Service, ShouldNotEqual, "")
-				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-1")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.11")
@@ -1145,7 +1132,6 @@ Your environment endpoint is: 172.16.186.44`
 
 				Info("And it will run the execution on the web node", " ", 8)
 				So(ex2.Service, ShouldNotEqual, "")
-				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1193,8 +1179,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -1235,7 +1220,6 @@ Your environment endpoint is: 172.16.186.44`
 				Info("Then I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
 				So(ex.Service, ShouldNotEqual, "")
-				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-2")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.12")
@@ -1245,7 +1229,6 @@ Your environment endpoint is: 172.16.186.44`
 
 				Info("And it will run the execution on the web node ", " ", 8)
 				So(ex2.Service, ShouldNotEqual, "")
-				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1274,8 +1257,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -1287,7 +1269,6 @@ Your environment endpoint is: 172.16.186.44`
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will run the updated execution on both web nodes ", " ", 8)
 				So(event.Service, ShouldNotEqual, "")
-				So(event.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(event.Name, ShouldEqual, "Execution web 1")
 				So(event.ExecutionType, ShouldEqual, "fake")
 				So(event.ExecutionPayload, ShouldEqual, "date; uptime")
@@ -1330,8 +1311,7 @@ Running executions:
  - Execution db 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -1373,7 +1353,6 @@ Your environment endpoint is: 172.16.186.44`
 
 				Info("And it will bootstrap the db node ", " ", 8)
 				So(ex.Service, ShouldNotEqual, "")
-				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-db-1")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.21")
@@ -1382,7 +1361,6 @@ Your environment endpoint is: 172.16.186.44`
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 				Printf("\n        And it will run the execution on the db node ")
 				So(ex2.Service, ShouldNotEqual, "")
-				So(ex2.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex2.Name, ShouldEqual, "Execution db 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1417,8 +1395,7 @@ Running executions:
  - Cleanup Bootstrap fake-` + service2 + `-web-2
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 172.16.186.44`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -1456,7 +1433,6 @@ Your environment endpoint is: 172.16.186.44`
 
 				Info("And it will remove web-2's key from the salt master ", " ", 8)
 				So(ex.Service, ShouldNotEqual, "")
-				So(ex.ServiceEndPoint, ShouldEqual, "172.16.186.44")
 				So(ex.Name, ShouldEqual, "Cleanup Bootstrap fake-"+service2+"-web-2")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldEqual, "salt-key -y -d fake-"+service2+"-web-2")
