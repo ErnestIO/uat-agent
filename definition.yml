@@ -26,7 +26,7 @@ repos:
 
   - name: monit
     path: git@github.com:ernestio/monit.git
-    branch: develop
+    branch: wf_cleanup
     links:
       - nats
     ports:

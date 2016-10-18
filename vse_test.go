@@ -56,6 +56,7 @@ func TestVSE(t *testing.T) {
 					expected := `Starting environment creation
 Creating routers:
  - vse4
+   IP        : 1.1.1.1
    Status    : completed
 Routers created
 Creating networks:
@@ -225,7 +226,6 @@ SUCCESS: rules successfully applied`
 			subNe.Unsubscribe()
 			subFi.Unsubscribe()
 			subNa.Unsubscribe()
-			waitToDone()
 		})
 
 		Convey("When I apply a valid vse2.yml definition", func() {
@@ -273,7 +273,6 @@ SUCCESS: rules successfully applied`
 			})
 
 			subFi.Unsubscribe()
-			waitToDone()
 		})
 
 		Convey("When I apply a valid vse3.yml definition", func() {
@@ -952,8 +951,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment deletion
-Deleting instances:
+					expected := `Deleting instances:
  - fake-` + service + `-web-1
    IP        : 10.1.0.11
    Status    : completed

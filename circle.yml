@@ -10,7 +10,7 @@ machine:
     CURRENT_INSTANCE: http://ernest.local:80/
     JWT_SECRET: test
     IMPORT_PATH: "github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME"
-    ERNEST_APPLY_DELAY: 2
+    ERNEST_APPLY_DELAY: 1
 
   hosts:
     ernest.local: 127.0.0.1

@@ -183,7 +183,6 @@ func deleteConfig() {
 
 func ernest(cmdArgs ...string) (string, error) {
 	if cmdArgs[1] == "apply" {
-
 		if delay := os.Getenv("ERNEST_APPLY_DELAY"); delay != "" {
 			if t, err := strconv.Atoi(delay); err == nil {
 				println("\nWaiting " + delay + " seconds...")

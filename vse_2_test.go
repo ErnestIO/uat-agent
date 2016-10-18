@@ -47,6 +47,7 @@ func Test2VSE(t *testing.T) {
 					expected := `Starting environment creation
 Creating routers:
  - vse5
+   IP        : 1.1.1.1
    Status    : completed
 Routers created
 Creating networks:
