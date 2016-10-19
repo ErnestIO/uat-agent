@@ -127,7 +127,6 @@ SUCCESS: rules successfully applied`
 
 			})
 
-			waitToDone()
 		})
 
 		Convey("When I apply aws2.yml", func() {
@@ -169,7 +168,6 @@ SUCCESS: rules successfully applied`
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
 				So(eventI.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws3.yml", func() {
@@ -211,7 +209,6 @@ SUCCESS: rules successfully applied`
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
 				So(eventI.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws4.yml", func() {
@@ -252,7 +249,6 @@ SUCCESS: rules successfully applied`
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
 				So(eventI.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws5.yml", func() {
@@ -302,7 +298,6 @@ SUCCESS: rules successfully applied`
 				So(eventF.SecurityGroupRules.Ingress[1].Protocol, ShouldEqual, "-1")
 				So(eventF.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws6.yml", func() {
@@ -356,7 +351,6 @@ SUCCESS: rules successfully applied`
 				So(eventF.SecurityGroupRules.Ingress[1].Protocol, ShouldEqual, "-1")
 				So(eventF.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws7.yml", func() {
@@ -402,7 +396,6 @@ SUCCESS: rules successfully applied`
 				So(eventF.SecurityGroupRules.Ingress[0].Protocol, ShouldEqual, "-1")
 				So(eventF.Status, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws8.yml", func() {
@@ -439,7 +432,6 @@ SUCCESS: rules successfully applied`
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws9.yml", func() {
@@ -477,7 +469,6 @@ SUCCESS: rules successfully applied`
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws10.yml", func() {
@@ -538,7 +529,6 @@ SUCCESS: rules successfully applied`
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws11.yml", func() {
@@ -598,7 +588,6 @@ SUCCESS: rules successfully applied`
 				So(event.DatacenterVpcID, ShouldEqual, "fakeaws")
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws12.yml", func() {
@@ -659,7 +648,6 @@ SUCCESS: rules successfully applied`
 				So(event.NetworkSubnet, ShouldEqual, "10.2.0.0/24")
 				So(event.NetworkIsPublic, ShouldBeFalse)
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws13.yml", func() {
@@ -706,7 +694,6 @@ SUCCESS: rules successfully applied`
 				So(eventLB.Listeners[0].Protocol, ShouldEqual, "HTTP")
 				So(eventLB.Listeners[0].SSLCert, ShouldEqual, "")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws14.yml", func() {
@@ -757,7 +744,6 @@ SUCCESS: rules successfully applied`
 				So(eventLB.Listeners[1].Protocol, ShouldEqual, "HTTPS")
 				So(eventLB.Listeners[1].SSLCert, ShouldEqual, "foo")
 			})
-			waitToDone()
 		})
 
 		Convey("When I apply aws15.yml", func() {
@@ -793,7 +779,6 @@ SUCCESS: rules successfully applied`
 				So(eventLB.VpcID, ShouldEqual, "fakeaws")
 				So(eventLB.Name, ShouldEqual, "fakeaws-"+service+"-elb-1")
 			})
-			waitToDone()
 		})
 
 	})

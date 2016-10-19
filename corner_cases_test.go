@@ -90,7 +90,6 @@ func TestPatchService(t *testing.T) {
 			subIn.Unsubscribe()
 			sub.Unsubscribe()
 
-			waitToDone()
 		})
 
 		Convey("When this service is marked as errored", func() {
@@ -111,7 +110,6 @@ func TestPatchService(t *testing.T) {
 				So(err, ShouldBeNil)
 
 				sub.Unsubscribe()
-				// waitToDone()
 			})
 		})
 	})

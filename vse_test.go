@@ -56,6 +56,7 @@ func TestVSE(t *testing.T) {
 					expected := `Starting environment creation
 Creating routers:
  - vse4
+   IP        : 1.1.1.1
    Status    : completed
 Routers created
 Creating networks:
@@ -243,8 +244,7 @@ Updating firewalls:
  - fake-` + service + `-vse4
    Status    : completed
 Firewalls updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 				event := firewallEvent{}
@@ -291,8 +291,7 @@ Updating nats:
  - fake-` + service + `-vse4
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -367,8 +366,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -445,8 +443,7 @@ Updating instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -695,8 +692,7 @@ Updating nats:
  - fake-` + service + `-vse4
    Status    : completed
 Nats updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -789,8 +785,7 @@ Updating instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances successfully updated
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -864,8 +859,7 @@ Deleting instances:
    IP        : 10.1.0.12
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -914,8 +908,7 @@ Deleting instances:
    IP        : 10.2.0.11
    Status    : completed
 Instances deleted
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -958,8 +951,7 @@ Your environment endpoint is: 1.1.1.1`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment deletion
-Deleting instances:
+					expected := `Deleting instances:
  - fake-` + service + `-web-1
    IP        : 10.1.0.11
    Status    : completed

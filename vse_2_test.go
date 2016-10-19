@@ -47,6 +47,7 @@ func Test2VSE(t *testing.T) {
 					expected := `Starting environment creation
 Creating routers:
  - vse5
+   IP        : 1.1.1.1
    Status    : completed
 Routers created
 Creating networks:
@@ -89,8 +90,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -309,8 +309,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -382,8 +381,7 @@ Running executions:
  - Execution web 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
@@ -419,8 +417,7 @@ Running executions:
  - Execution db 1
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
@@ -500,8 +497,7 @@ Running executions:
  - Cleanup Bootstrap fake-` + service + `-web-2
    Status    : completed
 Executions ran
-SUCCESS: rules successfully applied
-Your environment endpoint is: 1.1.1.1`
+SUCCESS: rules successfully applied`
 					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})

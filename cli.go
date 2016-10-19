@@ -15,6 +15,7 @@ import (
 	"os/user"
 	"path"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 
@@ -181,13 +182,20 @@ func deleteConfig() {
 }
 
 func ernest(cmdArgs ...string) (string, error) {
+	if cmdArgs[1] == "apply" {
+		if delay := os.Getenv("ERNEST_APPLY_DELAY"); delay != "" {
+			if t, err := strconv.Atoi(delay); err == nil {
+				println("\nWaiting " + delay + " seconds...")
+				time.Sleep(time.Duration(t) * time.Second)
+			}
+		}
+	}
 	cmd := exec.Command("ernest-cli", cmdArgs...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return string(output), nil
-	} else {
-		return string(output), nil
+		println(err.Error())
 	}
+	return string(output), nil
 }
 
 func Info(str, pad string, l int) {

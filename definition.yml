@@ -26,7 +26,7 @@ repos:
 
   - name: monit
     path: git@github.com:ernestio/monit.git
-    branch: develop
+    branch: wf_cleanup
     links:
       - nats
     ports:
@@ -79,7 +79,7 @@ repos:
 
   - name: workflow-manager
     path: git@github.com:ernestio/workflow-manager.git
-    branch: develop
+    branch: cleanup
     links:
       - nats
       - redis
