@@ -276,3 +276,15 @@ type awsELBEvent struct {
 	ErrorCode           string           `json:"error_code"`
 	ErrorMessage        string           `json:"error_message"`
 }
+
+type awsS3Event struct {
+	Name           string         `json:"name"`
+	ACL            string         `json:"acl"`
+	BucketLocation string         `json:"bucket_location"`
+	Grantees       []awsS3Grantee `json:"grantees"`
+}
+type awsS3Grantee struct {
+	ID          string `json:"id"`
+	Type        string `json:"type"`
+	Permissions string `json:"permissions"`
+}
