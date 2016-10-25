@@ -53,7 +53,7 @@ func TestVSE(t *testing.T) {
 					log.Println(err.Error())
 				} else {
 
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating routers:
  - vse4
    IP        : 1.1.1.1
@@ -239,7 +239,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating firewalls:
  - fake-` + service + `-vse4
    Status    : completed
@@ -286,7 +286,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating nats:
  - fake-` + service + `-vse4
    Status    : completed
@@ -355,7 +355,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
@@ -434,7 +434,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating instances:
  - fake-` + service + `-web-1
    IP        : 10.1.0.11
@@ -599,7 +599,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating instances:
  - fake-` + service + `-web-1
    IP        : 10.1.0.11
@@ -682,7 +682,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating networks:
  - fake-` + service + `-db
    IP     : 10.2.0.0/24
@@ -774,7 +774,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-db-1
    IP        : 10.2.0.11
@@ -853,7 +853,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
@@ -902,7 +902,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fake-` + service + `-db-1
    IP        : 10.2.0.11
