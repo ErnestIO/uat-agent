@@ -36,7 +36,7 @@ func TestStandAloneInstances(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-stg-1
    IP        : 10.2.0.90
@@ -91,7 +91,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-stg-2
    IP        : 10.2.0.91
@@ -172,7 +172,7 @@ Instances successfully updated`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-dev-1
    IP        : 10.1.0.90
@@ -250,7 +250,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fake-` + service + `-stg-2
    IP        : 10.2.0.91
@@ -298,7 +298,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fake-` + service + `-stg-1
    IP        : 10.2.0.90

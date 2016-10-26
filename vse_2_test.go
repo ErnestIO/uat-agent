@@ -44,7 +44,7 @@ func Test2VSE(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating routers:
  - vse5
    IP        : 1.1.1.1
@@ -290,7 +290,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12
@@ -376,7 +376,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Running executions:
  - Execution web 1
    Status    : completed
@@ -398,7 +398,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fake-` + service + `-db-1
    IP        : 10.1.0.21
@@ -483,7 +483,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fake-` + service + `-web-2
    IP        : 10.1.0.12

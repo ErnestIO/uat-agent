@@ -42,7 +42,7 @@ func TestAWSHappyPath(t *testing.T) {
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating Vpc:
  - fakeaws
    Subnet    : 1.1.1.1/24
@@ -137,7 +137,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating instances:
  - fakeaws-` + service + `-web-2
    IP        : 10.1.0.12
@@ -178,7 +178,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fakeaws-` + service + `-web-2
    IP        : 10.1.0.12
@@ -219,7 +219,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating instances:
  - fakeaws-` + service + `-web-1
    IP        : 10.1.0.11
@@ -259,7 +259,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating firewalls:
  - fakeaws-` + service + `-web-sg-1
    Status    : completed
@@ -308,7 +308,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating firewalls:
  - fakeaws-` + service + `-web-sg-1
    Status    : completed
@@ -361,7 +361,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating firewalls:
  - fakeaws-` + service + `-web-sg-1
    Status    : completed
@@ -406,7 +406,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating networks:
  - fakeaws-` + service + `-bknd
    IP     : 10.2.0.0/24
@@ -442,7 +442,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting networks:
  - fakeaws-` + service + `-bknd
    IP     : 10.2.0.0/24
@@ -480,7 +480,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating networks:
  - fakeaws-` + service + `-bknd
    IP     : 10.2.0.0/24
@@ -540,7 +540,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting instances:
  - fakeaws-` + service + `-bknd-1
    IP        : 10.2.0.11
@@ -599,7 +599,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating networks:
  - fakeaws-` + service + `-db
    IP     : 10.2.0.0/24
@@ -658,7 +658,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Creating ELBs:
  - fakeaws-` + service + `-elb-1
    Status    : completed
@@ -704,7 +704,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Updating ELBs:
  - fakeaws-` + service + `-elb-1
    Status    : completed
@@ -754,7 +754,7 @@ SUCCESS: rules successfully applied`
 				if err != nil {
 					log.Println(err.Error())
 				} else {
-					expected := `Starting environment creation
+					expected := `Applying you definition
 Deleting ELBs:
  - fakeaws-` + service + `-elb-1
    Status    : completed
