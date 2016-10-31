@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/nats-io/nats"
@@ -31,24 +30,10 @@ func TestStandAloneInstances(t *testing.T) {
 			f := getDefinitionPath("inst1.yml", service)
 			sub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-stg-1
-   IP        : 10.2.0.90
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-stg-1
-   IP        : 10.2.0.90
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -86,23 +71,10 @@ SUCCESS: rules successfully applied`
 			csub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 			usub, _ := n.ChanSubscribe("instance.update.vcloud-fake", inUpdateSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-stg-2
-   IP        : 10.2.0.91
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-stg-2
-   IP        : 10.2.0.91
-   Status    : completed
-Instances successfully updated`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -167,24 +139,10 @@ Instances successfully updated`
 			csub, _ := n.ChanSubscribe("instance.create.vcloud-fake", inCreateSub)
 			usub, _ := n.ChanSubscribe("instance.update.vcloud-fake", inUpdateSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-dev-1
-   IP        : 10.1.0.90
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-dev-1
-   IP        : 10.1.0.90
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -245,19 +203,11 @@ SUCCESS: rules successfully applied`
 
 			dsub, _ := n.ChanSubscribe("instance.delete.vcloud-fake", inDeleteSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service + `-stg-2
-   IP        : 10.2.0.91
-   Status    : completed
-Instances deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
+
 				}
 
 				Info("And it will delete stg-2 instance", " ", 8)
@@ -293,19 +243,10 @@ SUCCESS: rules successfully applied`
 
 			dsub, _ := n.ChanSubscribe("instance.delete.vcloud-fake", inDeleteSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service + `-stg-1
-   IP        : 10.2.0.90
-   Status    : completed
-Instances deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 

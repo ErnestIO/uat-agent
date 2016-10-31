@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/nats-io/nats"
@@ -44,37 +43,10 @@ func TestPreVSE(t *testing.T) {
 
 			f := getDefinitionPath("novse1.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fake-` + service + `-web
-   IP     : 10.1.0.0/24
-   Status : completed
-Networks successfully created
-Creating instances:
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully updated
-Creating firewalls:
- - fake-` + service + `-vse2
-   Status    : completed
-Firewalls created
-Creating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n := networkEvent{}
@@ -194,18 +166,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse2.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating firewalls:
- - fake-` + service + `-vse2
-   Status    : completed
-Firewalls updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("Then I should receive a valid firewall.update.vcloud-fake", " ", 8)
@@ -239,18 +203,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse3.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("Then I should receive a valid nats.update.vcloud-fake", " ", 8)
@@ -287,24 +243,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse4.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -364,22 +306,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse5.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating instances:
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -439,22 +369,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse6.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating instances:
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -518,22 +436,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse7.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating instances:
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -598,23 +504,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse8.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fake-` + service + `-db
-   IP     : 10.2.0.0/24
-   Status : completed
-Networks successfully created
-Updating nats:
- - fake-` + service + `-vse2
-   Status    : completed
-Nats updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n := networkEvent{}
@@ -674,24 +567,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse9.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-db-1
-   IP        : 10.2.0.11
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-db-1
-   IP        : 10.2.0.11
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -751,19 +630,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse10.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -801,19 +671,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse11.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service + `-db-1
-   IP        : 10.2.0.11
-   Status    : completed
-Instances deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := instanceEvent{}
@@ -854,54 +715,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse12.yml", service2)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fake-` + service2 + `-salt
-   IP     : 10.254.254.0/24
-   Status : completed
- - fake-` + service2 + `-web
-   IP     : 10.1.0.0/24
-   Status : completed
-Networks successfully created
-Creating instances:
- - fake-` + service2 + `-salt-master
-   IP        : 10.254.254.100
-   Status    : completed
- - fake-` + service2 + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service2 + `-salt-master
-   IP        : 10.254.254.100
-   Status    : completed
- - fake-` + service2 + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully updated
-Creating firewalls:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Firewalls created
-Creating nats:
- - fake-` + service2 + `-vse2
-   Status    : completed
-Nats created
-Running bootstraps:
- - Bootstrap fake-` + service2 + `-web-1
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				n1 := networkEvent{}
@@ -1155,32 +972,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse13.yml", service2)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service2 + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service2 + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-Running bootstraps:
- - Bootstrap fake-` + service2 + `-web-2
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -1247,18 +1042,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse14.yml", service2)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := executionEvent{}
@@ -1287,32 +1074,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse15.yml", service2)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service2 + `-db-1
-   IP        : 10.1.0.21
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service2 + `-db-1
-   IP        : 10.1.0.21
-   Status    : completed
-Instances successfully updated
-Running bootstraps:
- - Bootstrap fake-` + service2 + `-db-1
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution db 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("And I should receive a valid instance.create.vcloud-fake", " ", 8)
@@ -1380,23 +1145,10 @@ SUCCESS: rules successfully applied`
 
 			f := getDefinitionPath("novse16.yml", service2)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service2 + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances deleted
-Running executions:
- - Cleanup Bootstrap fake-` + service2 + `-web-2
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				Info("And I should receive a valid instance.delete.vcloud-fake", " ", 8)

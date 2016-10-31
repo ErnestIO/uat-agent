@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/nats-io/nats"
@@ -25,6 +24,7 @@ func TestAWSHappyPath(t *testing.T) {
 	fiSub := make(chan *nats.Msg, 1)
 	naSub := make(chan *nats.Msg, 1)
 	lbSub := make(chan *nats.Msg, 1)
+	s3Sub := make(chan *nats.Msg, 1)
 
 	basicSetup("aws")
 
@@ -36,35 +36,11 @@ func TestAWSHappyPath(t *testing.T) {
 			subInC, _ := n.ChanSubscribe("instance.create.aws-fake", inSub)
 			subFiC, _ := n.ChanSubscribe("firewall.create.aws-fake", fiSub)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 
 			Convey("Then I should create a valid service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating Vpc:
- - fakeaws
-   Subnet    : 1.1.1.1/24
-   Status    : completed
-Vpc created
-Creating networks:
- - fakeaws-` + service + `-web
-   IP     : 10.1.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks successfully created
-Creating firewalls:
- - fakeaws-` + service + `-web-sg-1
-   Status    : completed
-Firewalls created
-Creating instances:
- - fakeaws-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -132,19 +108,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws2.yml", func() {
 			f := getDefinitionPathAWS("aws2.yml", service)
 			subInC, _ := n.ChanSubscribe("instance.create.aws-fake", inSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should create a new xx-web-2 instance", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fakeaws-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -173,19 +140,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws3.yml", func() {
 			f := getDefinitionPathAWS("aws3.yml", service)
 			subInD, _ := n.ChanSubscribe("instance.delete.aws-fake", inSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should delete xx-web-2 instance", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fakeaws-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -214,19 +172,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws4.yml", func() {
 			f := getDefinitionPathAWS("aws4.yml", service)
 			subInC, _ := n.ChanSubscribe("instance.update.aws-fake", inSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should update xx-web-1 instance", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating instances:
- - fakeaws-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -254,18 +203,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws5.yml", func() {
 			f := getDefinitionPathAWS("aws5.yml", service)
 			subFiU, _ := n.ChanSubscribe("firewall.update.aws-fake", fiSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should add an Ingress rule to existing firewall", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating firewalls:
- - fakeaws-` + service + `-web-sg-1
-   Status    : completed
-Firewalls updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -303,18 +244,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws6.yml", func() {
 			f := getDefinitionPathAWS("aws6.yml", service)
 			subFiU, _ := n.ChanSubscribe("firewall.update.aws-fake", fiSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should add an Egress rule to existing firewall", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating firewalls:
- - fakeaws-` + service + `-web-sg-1
-   Status    : completed
-Firewalls updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -356,18 +289,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws7.yml", func() {
 			f := getDefinitionPathAWS("aws7.yml", service)
 			subFiU, _ := n.ChanSubscribe("firewall.update.aws-fake", fiSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should delete previously added egress and ingress rules from  existing firewall", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating firewalls:
- - fakeaws-` + service + `-web-sg-1
-   Status    : completed
-Firewalls updated
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventF := awsFirewallEvent{}
@@ -401,20 +326,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws8.yml", func() {
 			f := getDefinitionPathAWS("aws8.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should create the new 10.2.0.0/24 network", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fakeaws-` + service + `-bknd
-   IP     : 10.2.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks successfully created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -437,20 +352,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws9.yml", func() {
 			f := getDefinitionPathAWS("aws9.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.delete.aws-fake", neSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should delete network 10.2.0.0/24", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting networks:
- - fakeaws-` + service + `-bknd
-   IP     : 10.2.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -475,25 +380,10 @@ SUCCESS: rules successfully applied`
 			f := getDefinitionPathAWS("aws10.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
 			subInC, _ := n.ChanSubscribe("instance.create.aws-fake", inSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should create the new 10.2.0.0/24 network", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fakeaws-` + service + `-bknd
-   IP     : 10.2.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks successfully created
-Creating instances:
- - fakeaws-` + service + `-bknd-1
-   IP        : 10.2.0.11
-   Status    : completed
-Instances successfully created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -535,25 +425,10 @@ SUCCESS: rules successfully applied`
 			f := getDefinitionPathAWS("aws11.yml", service)
 			subNeD, _ := n.ChanSubscribe("network.delete.aws-fake", neSub)
 			subInD, _ := n.ChanSubscribe("instance.delete.aws-fake", inSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should delete the 10.2.0.0/24 network", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fakeaws-` + service + `-bknd-1
-   IP        : 10.2.0.11
-   Status    : completed
-Instances deleted
-Deleting networks:
- - fakeaws-` + service + `-bknd
-   IP     : 10.2.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventI := awsInstanceEvent{}
@@ -594,24 +469,10 @@ SUCCESS: rules successfully applied`
 			f := getDefinitionPathAWS("aws12.yml", service)
 			subNeC, _ := n.ChanSubscribe("network.create.aws-fake", neSub)
 			subNaC, _ := n.ChanSubscribe("nat.create.aws-fake", naSub)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should create the new 10.2.0.0/24 network", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating networks:
- - fakeaws-` + service + `-db
-   IP     : 10.2.0.0/24
-   AWS ID : foo
-   Status : completed
-Networks successfully created
-Creating nats:
- - fakeaws-` + service + `-db-nat
-   Status    : completed
-Nats created
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				event := awsNetworkEvent{}
@@ -653,28 +514,24 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply aws13.yml", func() {
 			f := getDefinitionPathAWS("aws13.yml", service)
 			subLBC, _ := n.ChanSubscribe("elb.create.aws-fake", lbSub)
-			o, err := ernest("service", "apply", f)
+			subS3, _ := n.ChanSubscribe("s3.create.aws-fake", s3Sub)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should create the new elb-1 elb", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating ELBs:
- - fakeaws-` + service + `-elb-1
-   Status    : completed
-   DNS    : fake-dns-name
-ELBs created
-SUCCESS: rules successfully applied`
-
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventLB := awsELBEvent{}
-
 				msg, err := waitMsg(lbSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &eventLB)
 				subLBC.Unsubscribe()
+
+				eventS3 := awsS3Event{}
+				msg, err = waitMsg(s3Sub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventS3)
+				subS3.Unsubscribe()
 
 				Info("And should call elb creator connector with valid fields", " ", 6)
 				So(eventLB.Type, ShouldEqual, "aws-fake")
@@ -693,34 +550,40 @@ SUCCESS: rules successfully applied`
 				So(eventLB.Listeners[0].FromPort, ShouldEqual, 80)
 				So(eventLB.Listeners[0].Protocol, ShouldEqual, "HTTP")
 				So(eventLB.Listeners[0].SSLCert, ShouldEqual, "")
+
+				Info("And should call s3 creator connector with valid fields", " ", 6)
+				So(eventS3.Name, ShouldEqual, "bucket-1")
+				So(eventS3.ACL, ShouldEqual, "")
+				So(eventS3.BucketLocation, ShouldEqual, "eu-west-1")
+				So(len(eventS3.Grantees), ShouldEqual, 1)
+				g := eventS3.Grantees[0]
+				So(g.ID, ShouldEqual, "foo@r3labs.io")
+				So(g.Type, ShouldEqual, "emailaddress")
+				So(g.Permissions, ShouldEqual, "FULL_CONTROL")
 			})
 		})
 
 		Convey("When I apply aws14.yml", func() {
 			f := getDefinitionPathAWS("aws14.yml", service)
 			subLBU, _ := n.ChanSubscribe("elb.update.aws-fake", lbSub)
-			o, err := ernest("service", "apply", f)
+			subS3, _ := n.ChanSubscribe("s3.update.aws-fake", s3Sub)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should update the elb-1 elb", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Updating ELBs:
- - fakeaws-` + service + `-elb-1
-   Status    : completed
-   DNS    : fake-dns-name
-ELBs updated
-SUCCESS: rules successfully applied`
-
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventLB := awsELBEvent{}
-
 				msg, err := waitMsg(lbSub)
 				So(err, ShouldBeNil)
 				json.Unmarshal(msg.Data, &eventLB)
 				subLBU.Unsubscribe()
+
+				eventS3 := awsS3Event{}
+				msg, err = waitMsg(s3Sub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventS3)
+				subS3.Unsubscribe()
 
 				Info("And should call elb updater connector with valid fields", " ", 6)
 				So(eventLB.Type, ShouldEqual, "aws-fake")
@@ -743,25 +606,31 @@ SUCCESS: rules successfully applied`
 				So(eventLB.Listeners[1].FromPort, ShouldEqual, 443)
 				So(eventLB.Listeners[1].Protocol, ShouldEqual, "HTTPS")
 				So(eventLB.Listeners[1].SSLCert, ShouldEqual, "foo")
+
+				Info("And should call s3 creator connector with valid fields", " ", 6)
+				So(eventS3.Name, ShouldEqual, "bucket-1")
+				So(eventS3.ACL, ShouldEqual, "")
+				So(eventS3.BucketLocation, ShouldEqual, "eu-west-1")
+				So(len(eventS3.Grantees), ShouldEqual, 2)
+				g := eventS3.Grantees[0]
+				So(g.ID, ShouldEqual, "foo@r3labs.io")
+				So(g.Type, ShouldEqual, "emailaddress")
+				So(g.Permissions, ShouldEqual, "FULL_CONTROL")
+				g = eventS3.Grantees[1]
+				So(g.ID, ShouldEqual, "bar@r3labs.io")
+				So(g.Type, ShouldEqual, "emailaddress")
+				So(g.Permissions, ShouldEqual, "WRITE")
 			})
 		})
 
 		Convey("When I apply aws15.yml", func() {
 			f := getDefinitionPathAWS("aws15.yml", service)
 			subLBD, _ := n.ChanSubscribe("elb.delete.aws-fake", lbSub)
-			o, err := ernest("service", "apply", f)
+			subS3, _ := n.ChanSubscribe("s3.delete.aws-fake", s3Sub)
+			_, err := ernest("service", "apply", f)
 			Convey("Then it should delete the elb-1 elb", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting ELBs:
- - fakeaws-` + service + `-elb-1
-   Status    : completed
-   DNS    : fake-dns-name
-ELBs deleted
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				eventLB := awsELBEvent{}
@@ -771,6 +640,12 @@ SUCCESS: rules successfully applied`
 				json.Unmarshal(msg.Data, &eventLB)
 				subLBD.Unsubscribe()
 
+				eventS3 := awsS3Event{}
+				msg, err = waitMsg(s3Sub)
+				So(err, ShouldBeNil)
+				json.Unmarshal(msg.Data, &eventS3)
+				subS3.Unsubscribe()
+
 				Info("And should call elb updater connector with valid fields", " ", 6)
 				So(eventLB.Type, ShouldEqual, "aws-fake")
 				So(eventLB.DatacenterRegion, ShouldEqual, "fake")
@@ -778,6 +653,20 @@ SUCCESS: rules successfully applied`
 				So(eventLB.DatacenterSecret, ShouldEqual, "secret")
 				So(eventLB.VpcID, ShouldEqual, "fakeaws")
 				So(eventLB.Name, ShouldEqual, "fakeaws-"+service+"-elb-1")
+
+				Info("And should call s3 creator connector with valid fields", " ", 6)
+				So(eventS3.Name, ShouldEqual, "bucket-1")
+				So(eventS3.ACL, ShouldEqual, "")
+				So(eventS3.BucketLocation, ShouldEqual, "eu-west-1")
+				So(len(eventS3.Grantees), ShouldEqual, 2)
+				g := eventS3.Grantees[0]
+				So(g.ID, ShouldEqual, "foo@r3labs.io")
+				So(g.Type, ShouldEqual, "emailaddress")
+				So(g.Permissions, ShouldEqual, "FULL_CONTROL")
+				g = eventS3.Grantees[1]
+				So(g.ID, ShouldEqual, "bar@r3labs.io")
+				So(g.Type, ShouldEqual, "emailaddress")
+				So(g.Permissions, ShouldEqual, "WRITE")
 			})
 		})
 

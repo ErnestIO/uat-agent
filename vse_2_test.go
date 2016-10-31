@@ -9,7 +9,6 @@ import (
 	"log"
 	"math/rand"
 	"strconv"
-	"strings"
 	"testing"
 
 	"github.com/nats-io/nats"
@@ -39,59 +38,10 @@ func Test2VSE(t *testing.T) {
 
 			f := getDefinitionPath("vse12.yml", service)
 
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating routers:
- - vse5
-   IP        : 1.1.1.1
-   Status    : completed
-Routers created
-Creating networks:
- - fake-` + service + `-salt
-   IP     : 10.254.254.0/24
-   Status : completed
- - fake-` + service + `-web
-   IP     : 10.1.0.0/24
-   Status : completed
-Networks successfully created
-Creating instances:
- - fake-` + service + `-salt-master
-   IP        : 10.254.254.100
-   Status    : completed
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-salt-master
-   IP        : 10.254.254.100
-   Status    : completed
- - fake-` + service + `-web-1
-   IP        : 10.1.0.11
-   Status    : completed
-Instances successfully updated
-Creating firewalls:
- - fake-` + service + `-vse5
-   Status    : completed
-Firewalls created
-Creating nats:
- - fake-` + service + `-vse5
-   Status    : completed
-Nats created
-Running bootstraps:
- - Bootstrap fake-` + service + `-web-1
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				r := routerEvent{}
@@ -285,32 +235,10 @@ SUCCESS: rules successfully applied`
 			subInUpdate, _ := n.ChanSubscribe("instance.update.vcloud-fake", inUpdateSub)
 
 			f := getDefinitionPath("vse13.yml", service)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances successfully updated
-Running bootstraps:
- - Bootstrap fake-` + service + `-web-2
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -371,18 +299,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply a valid vse14.yml definition", func() {
 
 			f := getDefinitionPath("vse14.yml", service)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Running executions:
- - Execution web 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 			//TODO : we may need to check executions here
@@ -393,32 +313,10 @@ SUCCESS: rules successfully applied`
 			subInUpdate, _ := n.ChanSubscribe("instance.update.vcloud-fake", inUpdateSub)
 
 			f := getDefinitionPath("vse15.yml", service)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Creating instances:
- - fake-` + service + `-db-1
-   IP        : 10.1.0.21
-   Status    : completed
-Instances successfully created
-Updating instances:
- - fake-` + service + `-db-1
-   IP        : 10.1.0.21
-   Status    : completed
-Instances successfully updated
-Running bootstraps:
- - Bootstrap fake-` + service + `-db-1
-   Status    : completed
-Bootstrap ran
-Running executions:
- - Execution db 1
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 
 				i := instanceEvent{}
@@ -478,27 +376,10 @@ SUCCESS: rules successfully applied`
 		Convey("When I apply a valid vse16.yml definition", func() {
 
 			f := getDefinitionPath("vse16.yml", service)
-			o, err := ernest("service", "apply", f)
+			_, err := ernest("service", "apply", f)
 			Convey("Then I should get a valid output for a processed service", func() {
 				if err != nil {
 					log.Println(err.Error())
-				} else {
-					expected := `Applying you definition
-Deleting instances:
- - fake-` + service + `-web-2
-   IP        : 10.1.0.12
-   Status    : completed
-Instances deleted
-Updating firewalls:
- - fake-` + service + `-vse5
-   Status    : completed
-Firewalls updated
-Running executions:
- - Cleanup Bootstrap fake-` + service + `-web-2
-   Status    : completed
-Executions ran
-SUCCESS: rules successfully applied`
-					So(strings.Contains(o, expected), ShouldBeTrue)
 				}
 			})
 		})

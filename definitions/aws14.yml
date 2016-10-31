@@ -55,3 +55,14 @@ loadbalancers:
         ssl_cert: foo
     security_groups:
       - web-sg-1
+
+s3_buckets:
+  - name: bucket-1
+    bucket_location: eu-west-1
+    grantees:
+      - id: foo@r3labs.io
+        type: emailaddress
+        permissions: full_control
+      - id: bar@r3labs.io
+        type: emailaddress
+        permissions: write
