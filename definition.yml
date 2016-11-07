@@ -136,36 +136,6 @@ repos:
     environment:
       NATS_URI: 'nats://nats:4222'
 
-  - name: network-adapter
-    path: git@github.com:ernestio/network-adapter.git
-    branch: develop
-    links:
-      - nats
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
-  - name: instance-adapter
-    path: git@github.com:ernestio/instance-adapter.git
-    branch: develop
-    links:
-      - nats
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
-  - name: nat-adapter
-    path: git@github.com:ernestio/nat-adapter.git
-    branch: develop
-    links:
-      - nats
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
   - name: execution-adapter
     path: git@github.com:ernestio/execution-adapter.git
     branch: develop
@@ -178,39 +148,6 @@ repos:
 
   - name: router-builder
     path: git@github.com:ernestio/router-builder.git
-    branch: develop
-    links:
-      - nats
-      - redis
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
-  - name: network-builder
-    path: git@github.com:ernestio/network-builder.git
-    branch: develop
-    links:
-      - nats
-      - redis
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
-  - name: instance-builder
-    path: git@github.com:ernestio/instance-builder.git
-    branch: develop
-    links:
-      - nats
-      - redis
-    depends:
-      - config-store
-    environment:
-      NATS_URI: 'nats://nats:4222'
-
-  - name: nat-builder
-    path: git@github.com:ernestio/nat-builder.git
     branch: develop
     links:
       - nats
