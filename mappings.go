@@ -7,13 +7,12 @@ package main
 type networkEvent struct {
 	Type                string   `json:"type"`
 	Service             string   `json:"service"`
-	NetworkType         string   `json:"network_type"`
-	NetworkName         string   `json:"network_name"`
-	NetworkNetmask      string   `json:"network_netmask"`
-	NetworkStartAddress string   `json:"network_start_address"`
-	NetworkEndAddress   string   `json:"network_end_address"`
-	NetworkGateway      string   `json:"network_gateway"`
-	DNS                 []string `json:"network_dns"`
+	NetworkName         string   `json:"name"`
+	NetworkNetmask      string   `json:"netmask"`
+	NetworkStartAddress string   `json:"start_address"`
+	NetworkEndAddress   string   `json:"end_address"`
+	NetworkGateway      string   `json:"gateway"`
+	DNS                 []string `json:"dns"`
 	RouterName          string   `json:"router_name"`
 	RouterType          string   `json:"router_type,omitempty"`
 	RouterIP            string   `json:"router_ip"`
@@ -27,22 +26,31 @@ type networkEvent struct {
 }
 
 type instanceEvent struct {
-	Service            string   `json:"service_id"`
-	Type               string   `json:"type"`
-	InstanceName       string   `json:"instance_name"`
-	InstanceType       string   `json:"instance_type"`
-	Resource           resource `json:"instance_resource"`
-	RouterName         string   `json:"router_name"`
-	RouterType         string   `json:"router_type"`
-	RouterIP           string   `json:"router_ip"`
-	ClientName         string   `json:"client_name"`
-	DatacenterName     string   `json:"datacenter_name"`
-	DatacenterPassword string   `json:"datacenter_password"`
-	DatacenterRegion   string   `json:"datacenter_region"`
-	DatacenterType     string   `json:"datacenter_type"`
-	DatacenterUsername string   `json:"datacenter_username"`
-	NetworkName        string   `json:"network_name"`
-	VCloudURL          string   `json:"vcloud_url"`
+	Service            string `json:"service_id"`
+	InstanceName       string `json:"name"`
+	InstanceType       string `json:"_type"`
+	ReferenceImage     string `json:"reference_image"`
+	ReferenceCatalog   string `json:"reference_catalog"`
+	RouterName         string `json:"router_name"`
+	RouterType         string `json:"router_type"`
+	Cpus               int    `json:"cpus"`
+	Memory             int    `json:"ram"`
+	Disks              []disk `json:"disks"`
+	IP                 string `json:"ip"`
+	RouterIP           string `json:"router_ip"`
+	ClientName         string `json:"client_name"`
+	DatacenterName     string `json:"datacenter_name"`
+	DatacenterPassword string `json:"datacenter_password"`
+	DatacenterRegion   string `json:"datacenter_region"`
+	DatacenterType     string `json:"datacenter_type"`
+	DatacenterUsername string `json:"datacenter_username"`
+	NetworkName        string `json:"network_name"`
+	VCloudURL          string `json:"vcloud_url"`
+}
+
+type disk struct {
+	ID   int `json:"id"`
+	Size int `json:"size"`
 }
 
 type fwrule struct {
@@ -55,7 +63,7 @@ type fwrule struct {
 
 type firewallEvent struct {
 	Service            string   `json:"service_id"`
-	Type               string   `json:"type"`
+	Type               string   `json:"_type"`
 	Name               string   `json:"firewall_name"`
 	ClientID           string   `json:"client_id"`
 	ClientName         string   `json:"client_name"`
@@ -72,8 +80,7 @@ type firewallEvent struct {
 	RouterIP           string   `json:"router_ip"`
 	Created            bool     `json:"created"`
 	FirewallID         string   `json:"firewall_id"`
-	FirewallType       string   `json:"firewall_type"`
-	Rules              []fwrule `json:"firewall_rules"`
+	Rules              []fwrule `json:"rules"`
 }
 
 type ntrule struct {
@@ -88,9 +95,9 @@ type ntrule struct {
 
 type natEvent struct {
 	Service            string   `json:"service_id"`
-	Type               string   `json:"type"`
-	NatName            string   `json:"nat_name"`
-	NatRules           []ntrule `json:"nat_rules"`
+	Type               string   `json:"_type"`
+	NatName            string   `json:"name"`
+	NatRules           []ntrule `json:"rules"`
 	RouterName         string   `json:"router_name"`
 	RouterType         string   `json:"router_type"`
 	RouterIP           string   `json:"router_ip"`
@@ -103,20 +110,6 @@ type natEvent struct {
 	ExternalNetwork    string   `json:"external_network"`
 	VCloudURL          string   `json:"vcloud_url"`
 	Status             string   `json:"status"`
-}
-
-type disk struct {
-	ID   int `json:"id"`
-	Size int `json:"size"`
-}
-
-type resource struct {
-	CPU     int    `json:"cpus"`
-	RAM     int    `json:"ram"`
-	IP      string `json:"ip"`
-	Catalog string `json:"reference_catalog"`
-	Image   string `json:"reference_image"`
-	Disks   []disk `json:"disks"`
 }
 
 type routerEvent struct {
