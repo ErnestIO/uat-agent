@@ -59,7 +59,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(event.RouterIP, ShouldEqual, "")
 				So(event.RouterName, ShouldEqual, "")
 				So(event.RouterType, ShouldEqual, "")
-				So(event.Service, ShouldNotEqual, "")
 			})
 
 			sub.Unsubscribe()
@@ -104,7 +103,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it will update stg-2 instance", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -124,7 +122,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 
 			})
 
@@ -172,7 +169,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it will update dev-1 instance", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -192,7 +188,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 			csub.Unsubscribe()
 			usub.Unsubscribe()
@@ -232,7 +227,6 @@ func TestStandAloneInstances(t *testing.T) {
 				So(event.RouterIP, ShouldEqual, "")
 				So(event.RouterName, ShouldEqual, "")
 				So(event.RouterType, ShouldEqual, "")
-				So(event.Service, ShouldNotEqual, "")
 			})
 
 			dsub.Unsubscribe()
@@ -273,7 +267,6 @@ func TestStandAloneInstances(t *testing.T) {
 			So(event.RouterIP, ShouldEqual, "")
 			So(event.RouterName, ShouldEqual, "")
 			So(event.RouterType, ShouldEqual, "")
-			So(event.Service, ShouldNotEqual, "")
 
 			dsub.Unsubscribe()
 		})

@@ -85,7 +85,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventF.SecurityGroupRules.Ingress[0].From, ShouldEqual, 80)
 				So(eventF.SecurityGroupRules.Ingress[0].To, ShouldEqual, 80)
 				So(eventF.SecurityGroupRules.Ingress[0].Protocol, ShouldEqual, "-1")
-				So(eventF.Status, ShouldEqual, "")
+				So(eventF.Status, ShouldEqual, "processing")
 
 				Info("And should call instance creator connector with valid fields", " ", 6)
 				So(eventI.Type, ShouldEqual, "aws-fake")
@@ -99,7 +99,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-web-1")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 
 			})
 
@@ -133,7 +133,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-web-2")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -165,7 +165,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-web-2")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -196,7 +196,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-web-1")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -237,7 +237,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventF.SecurityGroupRules.Ingress[1].From, ShouldEqual, 22)
 				So(eventF.SecurityGroupRules.Ingress[1].To, ShouldEqual, 22)
 				So(eventF.SecurityGroupRules.Ingress[1].Protocol, ShouldEqual, "-1")
-				So(eventF.Status, ShouldEqual, "")
+				So(eventF.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -282,7 +282,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventF.SecurityGroupRules.Ingress[1].From, ShouldEqual, 22)
 				So(eventF.SecurityGroupRules.Ingress[1].To, ShouldEqual, 22)
 				So(eventF.SecurityGroupRules.Ingress[1].Protocol, ShouldEqual, "-1")
-				So(eventF.Status, ShouldEqual, "")
+				So(eventF.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -319,7 +319,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventF.SecurityGroupRules.Ingress[0].From, ShouldEqual, 80)
 				So(eventF.SecurityGroupRules.Ingress[0].To, ShouldEqual, 80)
 				So(eventF.SecurityGroupRules.Ingress[0].Protocol, ShouldEqual, "-1")
-				So(eventF.Status, ShouldEqual, "")
+				So(eventF.Status, ShouldEqual, "processing")
 			})
 		})
 
@@ -409,7 +409,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-bknd-1")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 
 				Info("And should call network creator connector with valid fields", " ", 6)
 				So(event.Type, ShouldEqual, "aws-fake")
@@ -453,7 +453,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventI.InstanceName, ShouldEqual, "fakeaws-"+service+"-bknd-1")
 				So(eventI.InstanceImage, ShouldEqual, "ami-6666f915")
 				So(eventI.InstanceType, ShouldEqual, "e1.micro")
-				So(eventI.Status, ShouldEqual, "")
+				So(eventI.Status, ShouldEqual, "processing")
 
 				Info("And should call network deleter connector with valid fields", " ", 6)
 				So(event.Type, ShouldEqual, "aws-fake")
@@ -498,7 +498,7 @@ func TestAWSHappyPath(t *testing.T) {
 				So(eventN.PublicNetwork, ShouldEqual, "fakeaws-"+service+"-web")
 				So(len(eventN.RoutedNetworks), ShouldEqual, 1)
 				So(eventN.RoutedNetworks[0], ShouldEqual, "fakeaws-"+service+"-db")
-				So(eventN.Status, ShouldEqual, "")
+				So(eventN.Status, ShouldEqual, "processing")
 
 				Info("And should call network creator connector with valid fields", " ", 6)
 				So(event.Type, ShouldEqual, "aws-fake")

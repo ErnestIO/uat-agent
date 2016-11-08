@@ -95,18 +95,16 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid firewall.create.vcloud-fake", " ", 8)
 				So(f.DatacenterName, ShouldEqual, "fake")
 				So(f.DatacenterPassword, ShouldEqual, default_pwd)
 				So(f.DatacenterType, ShouldEqual, "vcloud-fake")
 				So(f.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
-				So(f.Type, ShouldEqual, "vcloud")
+				So(f.Type, ShouldEqual, "vcloud-fake")
 				So(f.RouterIP, ShouldEqual, "172.16.186.44")
 				So(f.RouterName, ShouldEqual, "vse2")
 				So(f.RouterType, ShouldEqual, "vcloud-fake")
-				So(f.Service, ShouldNotEqual, "")
 				So(len(f.Rules), ShouldEqual, 4)
 				Printf("\n        And it will allow internal:any to internal:any ")
 				So(f.Rules[0].SourcePort, ShouldEqual, "any")
@@ -151,7 +149,6 @@ func TestPreVSE(t *testing.T) {
 				So(na.RouterIP, ShouldEqual, "172.16.186.44")
 				So(na.RouterName, ShouldEqual, "vse2")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
-				So(na.Service, ShouldNotEqual, "")
 			})
 
 			nsub.Unsubscribe()
@@ -180,11 +177,10 @@ func TestPreVSE(t *testing.T) {
 				So(event.DatacenterPassword, ShouldEqual, default_pwd)
 				So(event.DatacenterType, ShouldEqual, "vcloud-fake")
 				So(event.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
-				So(event.Type, ShouldEqual, "vcloud")
+				So(event.Type, ShouldEqual, "vcloud-fake")
 				So(event.RouterIP, ShouldEqual, "172.16.186.44")
 				So(event.RouterName, ShouldEqual, "vse2")
 				So(event.RouterType, ShouldEqual, "vcloud-fake")
-				So(event.Service, ShouldNotEqual, "")
 				So(len(event.Rules), ShouldEqual, 5)
 				Printf("\n        And it will allow internal:any to external:any ")
 				So(event.Rules[4].SourcePort, ShouldEqual, "any")
@@ -220,7 +216,6 @@ func TestPreVSE(t *testing.T) {
 				So(event.RouterIP, ShouldEqual, "172.16.186.44")
 				So(event.RouterName, ShouldEqual, "vse2")
 				So(event.RouterType, ShouldEqual, "vcloud-fake")
-				So(event.Service, ShouldNotEqual, "")
 				So(event.NatName, ShouldEqual, "fake-"+service+"-vse2")
 				So(len(event.NatRules), ShouldEqual, 3)
 				Printf("\n        And it will forward port 22 to 10.1.0.12 ")
@@ -274,7 +269,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid instance.update.vcloud-fake", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -293,7 +287,6 @@ func TestPreVSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			icsub.Unsubscribe()
@@ -338,7 +331,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it will update cpu count on instance 2", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -357,7 +349,6 @@ func TestPreVSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			iusub.Unsubscribe()
@@ -403,7 +394,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it will update disks on instance 2", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -424,7 +414,6 @@ func TestPreVSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			iusub.Unsubscribe()
@@ -470,7 +459,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it will update ram on instance 2 ", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -491,7 +479,6 @@ func TestPreVSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			iusub.Unsubscribe()
@@ -528,10 +515,9 @@ func TestPreVSE(t *testing.T) {
 				So(n.NetworkNetmask, ShouldEqual, "255.255.255.0")
 				So(n.NetworkStartAddress, ShouldEqual, "10.2.0.5")
 				So(n.NetworkEndAddress, ShouldEqual, "10.2.0.250")
-				So(n.RouterIP, ShouldEqual, "")
+				So(n.RouterIP, ShouldEqual, "172.16.186.44")
 				So(n.RouterName, ShouldEqual, "vse2")
 				So(n.RouterType, ShouldEqual, "vcloud-fake")
-				So(n.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid nat.update.vcloud-fake", " ", 8)
 				So(na.DatacenterName, ShouldEqual, "fake")
@@ -552,7 +538,6 @@ func TestPreVSE(t *testing.T) {
 				So(na.RouterIP, ShouldEqual, "172.16.186.44")
 				So(na.RouterName, ShouldEqual, "vse2")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
-				So(na.Service, ShouldNotEqual, "")
 			})
 
 			nsub.Unsubscribe()
@@ -597,7 +582,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid instance.update.vcloud-fake", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -616,7 +600,6 @@ func TestPreVSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			icsub.Unsubscribe()
@@ -658,7 +641,6 @@ func TestPreVSE(t *testing.T) {
 				So(event.RouterIP, ShouldEqual, "")
 				So(event.RouterName, ShouldEqual, "")
 				So(event.RouterType, ShouldEqual, "")
-				So(event.Service, ShouldNotEqual, "")
 			})
 
 			isub.Unsubscribe()
@@ -697,7 +679,6 @@ func TestPreVSE(t *testing.T) {
 				So(event.RouterIP, ShouldEqual, "")
 				So(event.RouterName, ShouldEqual, "")
 				So(event.RouterType, ShouldEqual, "")
-				So(event.Service, ShouldNotEqual, "")
 			})
 
 			isub.Unsubscribe()
@@ -794,7 +775,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And it should create the user defined instance ", " ", 8)
 				So(i2.DatacenterName, ShouldEqual, "fake")
@@ -814,18 +794,16 @@ func TestPreVSE(t *testing.T) {
 				So(i2.RouterIP, ShouldEqual, "")
 				So(i2.RouterName, ShouldEqual, "")
 				So(i2.RouterType, ShouldEqual, "")
-				So(i2.Service, ShouldNotEqual, "")
 
 				Info("Then I should receive a valid firewall.create.vcloud-fake", " ", 8)
 				So(f.DatacenterName, ShouldEqual, "fake")
 				So(f.DatacenterPassword, ShouldEqual, default_pwd)
 				So(f.DatacenterType, ShouldEqual, "vcloud-fake")
 				So(f.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
-				So(f.Type, ShouldEqual, "vcloud")
+				So(f.Type, ShouldEqual, "vcloud-fake")
 				So(f.RouterIP, ShouldEqual, "172.16.186.44")
 				So(f.RouterName, ShouldEqual, "vse2")
 				So(f.RouterType, ShouldEqual, "vcloud-fake")
-				So(f.Service, ShouldNotEqual, "")
 				So(len(f.Rules), ShouldEqual, 8)
 
 				Info("And it will allow 10.254.254.0/24:any to any:22 ", " ", 8)
@@ -931,11 +909,9 @@ func TestPreVSE(t *testing.T) {
 				So(na.RouterIP, ShouldEqual, "172.16.186.44")
 				So(na.RouterName, ShouldEqual, "vse2")
 				So(na.RouterType, ShouldEqual, "vcloud-fake")
-				So(na.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
-				So(ex.Service, ShouldNotEqual, "")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-1")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.11")
@@ -944,7 +920,6 @@ func TestPreVSE(t *testing.T) {
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 
 				Info("And it will run the execution on the web node", " ", 8)
-				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1006,11 +981,9 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("Then I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will bootstrap the web node ", " ", 8)
-				So(ex.Service, ShouldNotEqual, "")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-web-2")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.12")
@@ -1019,7 +992,6 @@ func TestPreVSE(t *testing.T) {
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 
 				Info("And it will run the execution on the web node ", " ", 8)
-				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.Name, ShouldEqual, "Execution web 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1051,7 +1023,6 @@ func TestPreVSE(t *testing.T) {
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				Info("And it will run the updated execution on both web nodes ", " ", 8)
-				So(event.Service, ShouldNotEqual, "")
 				So(event.Name, ShouldEqual, "Execution web 1")
 				So(event.ExecutionType, ShouldEqual, "fake")
 				So(event.ExecutionPayload, ShouldEqual, "date; uptime")
@@ -1100,7 +1071,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				ex := executionEvent{}
@@ -1113,7 +1083,6 @@ func TestPreVSE(t *testing.T) {
 				json.Unmarshal(msg.Data, &ex2)
 
 				Info("And it will bootstrap the db node ", " ", 8)
-				So(ex.Service, ShouldNotEqual, "")
 				So(ex.Name, ShouldEqual, "Bootstrap fake-"+service2+"-db-1")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldContainSubstring, "-host 10.1.0.21")
@@ -1121,7 +1090,6 @@ func TestPreVSE(t *testing.T) {
 				So(ex.ServiceOptions.User, ShouldEqual, salt.User)
 				So(ex.ServiceOptions.Password, ShouldEqual, salt.Password)
 				Printf("\n        And it will run the execution on the db node ")
-				So(ex2.Service, ShouldNotEqual, "")
 				So(ex2.Name, ShouldEqual, "Execution db 1")
 				So(ex2.ExecutionType, ShouldEqual, "fake")
 				So(ex2.ExecutionPayload, ShouldEqual, "date")
@@ -1171,7 +1139,6 @@ func TestPreVSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("And I should receive a valid execution.create.fake", " ", 8)
 				ex := executionEvent{}
@@ -1180,7 +1147,6 @@ func TestPreVSE(t *testing.T) {
 				json.Unmarshal(msg.Data, &ex)
 
 				Info("And it will remove web-2's key from the salt master ", " ", 8)
-				So(ex.Service, ShouldNotEqual, "")
 				So(ex.Name, ShouldEqual, "Cleanup Bootstrap fake-"+service2+"-web-2")
 				So(ex.ExecutionType, ShouldEqual, "fake")
 				So(ex.ExecutionPayload, ShouldEqual, "salt-key -y -d fake-"+service2+"-web-2")
