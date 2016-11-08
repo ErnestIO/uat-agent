@@ -108,7 +108,6 @@ func Test2VSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("Then it configures ACLs on router vse5", " ", 8)
 				So(f.DatacenterName, ShouldEqual, "fake")
@@ -116,12 +115,11 @@ func Test2VSE(t *testing.T) {
 				So(f.DatacenterPassword, ShouldEqual, default_pwd)
 				So(f.DatacenterType, ShouldEqual, "vcloud-fake")
 				So(f.DatacenterUsername, ShouldEqual, default_usr+"@"+default_org)
-				So(f.Type, ShouldEqual, "vcloud")
+				So(f.Type, ShouldEqual, "vcloud-fake")
 				So(len(f.Rules), ShouldEqual, 9)
 				So(f.RouterIP, ShouldEqual, "1.1.1.1")
 				So(f.RouterName, ShouldEqual, "vse5")
 				So(f.RouterType, ShouldEqual, "vcloud-fake")
-				So(f.Service, ShouldNotEqual, "")
 				Printf("\n        And it will allow 10.254.254.0/24:any to 22:tcp ")
 				So(f.Rules[0].SourcePort, ShouldEqual, "any")
 				So(f.Rules[0].SourceIP, ShouldEqual, "10.254.254.0/24")
@@ -267,7 +265,6 @@ func Test2VSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("Then it will update web-2 instance", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -287,7 +284,6 @@ func Test2VSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 
 			})
 
@@ -345,7 +341,6 @@ func Test2VSE(t *testing.T) {
 				So(i.RouterIP, ShouldEqual, "")
 				So(i.RouterName, ShouldEqual, "")
 				So(i.RouterType, ShouldEqual, "")
-				So(i.Service, ShouldNotEqual, "")
 
 				Info("Then it will update db-1 instance", " ", 8)
 				So(iu.DatacenterName, ShouldEqual, "fake")
@@ -365,7 +360,6 @@ func Test2VSE(t *testing.T) {
 				So(iu.RouterIP, ShouldEqual, "")
 				So(iu.RouterName, ShouldEqual, "")
 				So(iu.RouterType, ShouldEqual, "")
-				So(iu.Service, ShouldNotEqual, "")
 			})
 
 			subInCreate.Unsubscribe()
